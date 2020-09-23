@@ -1,0 +1,10 @@
+{
+  "eslint.autoFixOnSave": true,
+  "eslint.enable": true,
+  "eslint.packageManager": "yarn",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+},
+"python.pythonPath": "C:\\Users\\BearSouL\\anaconda3\\envs\\NLP\\python.exe",
+"python.formatting.provider": "black",
+}
