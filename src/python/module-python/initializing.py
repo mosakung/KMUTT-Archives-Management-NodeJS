@@ -11,10 +11,9 @@ import readfile as rf
 import haddleTokenize
 import calculate
 
-tf.test.is_gpu_available(cuda_only=False, min_cuda_compute_capability=None)
-
-""" directory = sys.argv[1] """
-documents = rf.readDirectory(root + '/src/documents/dummy')
+""" directory = sys.argv[1]
+documents = rf.readDirectory(directory) """
+documents = rf.readDirectory('D:\\BearSouL\\Project\\prj-tf-idf-compact/src/documents/dummy')
 
 docsCut = []
 
@@ -25,3 +24,7 @@ for key, value in documents.items():
   docsCut.extend(docCut)
 
 print(docsCut)
+
+tf.model
+
+sys.stdout.flush()

@@ -4,7 +4,10 @@ import { once } from 'events'
 const readPython = async (file, param = []) => {
   const uint8arrayToString = (data) => String.fromCharCode.apply(null, data)
 
-  const child = spawn('C:/Users/BearSouL/anaconda3/envs/NLP/python.exe', [`${process.cwd()}/src/python/module-python${file}`, ...param])
+  console.log(`shell(spawn)> C:/Users/BearSouL/anaconda3/python.exe ${process.cwd()}/src/python/module-python${file}`)
+  console.log('param', param)
+
+  const child = spawn('C:/Users/BearSouL/anaconda3/python.exe', [`${process.cwd()}/src/python/module-python${file}`, ...param])
 
   const childResult = []
 

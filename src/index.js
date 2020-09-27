@@ -2,6 +2,7 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import readPython from './python/readPython'
+import pythonShell from './python/pythonShell'
 
 const app = express()
 
@@ -11,6 +12,10 @@ app.use(cors())
 readPython('./initializing.py', [`${process.cwd()}/src/documents/dummy`]).then((res) => {
   console.log(res)
 })
+
+/* pythonShell().then((res) => {
+  console.log(res)
+}) */
 
 if (app.get('env') === 'development') {
   app.use(morgan('tiny'))
