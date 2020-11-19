@@ -4,6 +4,7 @@ export async function up(knex) {
   return knex.schema.createTable(tableName, (table) => {
     table.increments('document_id').primary()
     table.string('name', 191)
+    table.integer('version', 255)
     table.text('path')
     table.string('DC_title', 191)
     table.string('DC_title_alternative', 191)

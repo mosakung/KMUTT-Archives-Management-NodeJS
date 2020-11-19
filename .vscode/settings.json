@@ -5,6 +5,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
 },
-"python.pythonPath": "C:\\Users\\BearSouL\\anaconda3\\python.exe",
+"python.pythonPath": "C:\\Users\\BearSouL\\.virtualenvs\\django-haddle-token-nlp-_Ko0kZ5M\\Scripts\\python.exe",
 "python.formatting.provider": "black",
 }

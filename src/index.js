@@ -1,27 +1,22 @@
-import express from 'express'
-import morgan from 'morgan'
-import cors from 'cors'
-import readPython from './python/readPython'
-import pythonShell from './python/pythonShell'
+import app, { serverGQL } from './app'
+import dotENV from './utils/setENV'
 
-const app = express()
+dotENV.config()
 
-app.use(express.json())
-app.use(cors())
-
-readPython('./initializing.py', [`${process.cwd()}/src/documents/dummy`]).then((res) => {
-  console.log(res)
-})
-
-/* pythonShell().then((res) => {
-  console.log(res)
-}) */
-
-if (app.get('env') === 'development') {
-  app.use(morgan('tiny'))
-}
-
-app.listen(3251, () => {
-  console.log('\nserver running on port 3000')
-  console.log('Terminate batch job (Ctrl + C)\n')
+app.listen(process.env.SERVER_PORT, () => {
+  console.log()
+  console.log('==============================')
+  console.log('\x1b[36m'
+    + `server running on port (${process.env.SERVER_PORT}) `)
+  console.log('\x1b[36m'
+    + 'Terminate batch job (Ctrl + C)', '\x1b[0m')
+  console.log('==============================')
+  console.log()
+  console.log('==============================')
+  console.log('\x1b[36m'
+    + 'GraphQL server running', '\x1b[0m')
+  console.log('\x1b[36m'
+    + `PATH localhost:${process.env.SERVER_PORT}${serverGQL.graphqlPath}`, '\x1b[0m')
+  console.log('==============================')
+  console.log()
 })

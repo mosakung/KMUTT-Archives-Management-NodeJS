@@ -1,0 +1,33 @@
+extend type Query {
+  userKeyword(idDocument: Int!): [UserKeyword]
+}
+
+extend type Mutation {
+  insertUserKeyword(body: InsertUserKeywordInput!): [ResultInsertUserKeyword],
+  deleteUserKeyword(body: DeleteUserKeywordInput!): ResultDeleteUserKeyword
+}
+
+input InsertUserKeywordInput {
+  keywords: [String]!,
+  idDocument: Int!
+}
+
+input DeleteUserKeywordInput {
+  keywordsId: Int!,
+  idDocument: Int!
+}
+
+type UserKeyword {
+  id: Int,
+  keyword: String
+}
+
+type ResultInsertUserKeyword {
+  status: Boolean,
+  message: String
+}
+
+type ResultDeleteUserKeyword {
+  status: Int,
+  message: String
+}

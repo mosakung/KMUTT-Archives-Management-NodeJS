@@ -1,0 +1,81 @@
+extend type Mutation {
+  addDocument(body: AddDocumentInput!): ResultAddDocument
+}
+
+input AddDocumentInput {
+  addVersion: Boolean
+  name: String!
+  path: String!
+  DC_relation: [String]
+  DC_type: [String]
+  DC_title: String!
+  DC_title_alternative: String
+  DC_description_table_of_contents: String
+  DC_description_summary_or_abstract: String
+  DC_description_note: String
+  DC_format: String
+  DC_format_extent: String
+  DC_identifier_URL: String
+  DC_identifier_ISBN: String
+  DC_source: String
+  DC_language: String
+  DC_coverage_spatial: String
+  DC_coverage_temporal: String
+  DC_rights: String
+  DC_rights_access: String
+  thesis_degree_name: String
+  thesis_degree_level: String
+  thesis_degree_discipline: String
+  thesis_degree_grantor: String
+  DC_creator: String
+  DC_creator_orgname: String
+  DC_publisher: String
+  DC_publisher_email: String
+  DC_contributor: String
+  DC_contributor_role: String
+  DC_issued_date: String
+  rec_create_by: String!
+}
+
+type ResultAddDocument {
+  status: Boolean,
+  message: String,
+  prevBody: DocumentPrevBody
+}
+
+type DocumentPrevBody {
+  addVersion: Boolean
+  name: String
+  path: String
+  DC_relation: [String]
+  DC_type: [String]
+  DC_title: String
+  DC_title_alternative: String
+  DC_description_table_of_contents: String
+  DC_description_summary_or_abstract: String
+  DC_description_note: String
+  DC_format: String
+  DC_format_extent: String
+  DC_identifier_URL: String
+  DC_identifier_ISBN: String
+  DC_source: String
+  DC_language: String
+  DC_coverage_spatial: String
+  DC_coverage_temporal: String
+  DC_rights: String
+  DC_rights_access: String
+  thesis_degree_name: String
+  thesis_degree_level: String
+  thesis_degree_discipline: String
+  thesis_degree_grantor: String
+  DC_creator: String
+  DC_creator_orgname: String
+  DC_publisher: String
+  DC_publisher_email: String
+  DC_contributor: String
+  DC_contributor_role: String
+  DC_issued_date: String
+  rec_create_by: String
+}
+
+
