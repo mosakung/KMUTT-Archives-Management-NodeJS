@@ -23,7 +23,7 @@ export const getTokenToStoreFunction = (password, user) => {
   if (passwordHash.verify(password, user.password)) {
     const token = jwt.sign(
       {
-        id: user.id, name: user.name, surname: user.surname, role: user.role,
+        id: user.user_id, name: user.name, surname: user.surname, role: user.role,
       }, process.env.SECRET,
       { expiresIn: '7d' },
     )

@@ -1,4 +1,4 @@
-const parserDocument = (param) => {
+const parserDocument = (param, { user }) => {
   if (!(param.name && param.path && param.DC_title)) { return false }
 
   const document = {
@@ -33,8 +33,8 @@ const parserDocument = (param) => {
     DC_contributor: param.DC_contributor,
     DC_contributor_role: param.DC_contributor_role,
     DC_issued_date: param.DC_issued_date,
-    rec_create_by: param.rec_create_by,
-    rec_modified_by: param.rec_modified_by,
+    rec_create_by: user.id,
+    rec_modified_by: user.id,
   }
 
   return document

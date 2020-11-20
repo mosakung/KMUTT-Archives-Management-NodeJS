@@ -9,7 +9,7 @@ export const documentGraphql = gql(fileGraphqlType)
 export const documentResolver = {
   Mutation: {
     // addDocument: async (body) => insertDocumentController(body),
-    addDocument: (_, { body }) => insertDocumentController(body),
+    addDocument: (_, { body }, context) => insertDocumentController(body, context),
   },
 }
 

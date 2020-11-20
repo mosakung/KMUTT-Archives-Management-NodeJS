@@ -1,8 +1,9 @@
 import djangoRequest from '../../django-request/djangoRequest'
 
-export const insertDocumentService = async (document) => {
+export const insertDocumentService = async (document, { user }) => {
   const objectBody = {
     document,
+    user,
   }
   const apiInsertDocument = 'add-document/'
   const result = await djangoRequest.post(apiInsertDocument, objectBody, true)

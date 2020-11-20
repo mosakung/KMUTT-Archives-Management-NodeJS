@@ -2,9 +2,16 @@ import db from '../../../db/initializing'
 
 export const viewUserKeywordRepository = async (id) => db.select('DC_keyword_id', 'DC_keyword').from('dc_keyword').where('index_document_id', id)
 
-export const alreadyKeyword = async (keyword, docId) => db.select().from('dc_keyword').where('DC_keyword', keyword).andWhere('index_document_id', docId)
+export const alreadyKeyword = async (keyword, docId) => db
+  .select()
+  .from('dc_keyword')
+  .where('DC_keyword', keyword)
+  .andWhere('index_document_id', docId)
 
-export const getKeyword = async (id) => db.select('DC_keyword').from('dc_keyword').where('DC_keyword_id', id)
+export const getKeyword = async (id) => db
+  .select('DC_keyword')
+  .from('dc_keyword')
+  .where('DC_keyword_id', id)
 
 export const deleteKeyword = async (id) => db('dc_keyword').where('DC_keyword_id', id).del()
 
@@ -14,7 +21,11 @@ export const convertIdToUserKeyword = async (id) => db.select('DC_keyword').from
 
 export const alreadyTerm = async (keyword) => db.select('term_word_id').from('term_word').where('term', keyword)
 
-export const alreadyScore = async (idTerm, idDocument) => db.select('score_id', 'score_tf').from('score').where('index_term_word_id', idTerm).andWhere('index_document_id', idDocument)
+export const alreadyScore = async (idTerm, idDocument) => db
+  .select('score_id', 'score_tf')
+  .from('score')
+  .where('index_term_word_id', idTerm)
+  .andWhere('index_document_id', idDocument)
 
 export const insertTerm = async (rawTerm) => db.from('term_word').insert({ term: rawTerm, frequency: 1 })
 

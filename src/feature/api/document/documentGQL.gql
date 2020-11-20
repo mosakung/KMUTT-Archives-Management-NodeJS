@@ -34,7 +34,6 @@ input AddDocumentInput {
   DC_contributor: String
   DC_contributor_role: String
   DC_issued_date: String
-  rec_create_by: String!
 }
 
 type ResultAddDocument {

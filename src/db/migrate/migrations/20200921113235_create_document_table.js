@@ -3,6 +3,7 @@ const tableName = 'document'
 export async function up(knex) {
   return knex.schema.createTable(tableName, (table) => {
     table.increments('document_id').primary()
+    table.integer('status_process_document', 2).defaultTo(0)
     table.string('name', 191)
     table.integer('version', 255)
     table.text('path')
@@ -26,9 +27,9 @@ export async function up(knex) {
     table.string('thesis_degree_discipline', 191)
     table.string('thesis_degree_grantor', 191)
     table.datetime('rec_create_at', { precision: 6 }).defaultTo(knex.fn.now(6))
-    table.string('rec_create_by', 191)
+    table.integer('rec_create_by', 10).unsigned()
     table.datetime('rec_modified_at', { precision: 6 }).defaultTo(knex.fn.now(6))
-    table.string('rec_modified_by', 191)
+    table.integer('rec_modified_by', 10).unsigned()
     table.integer('index_creator', 10).unsigned()
     table.integer('index_creator_orgname', 10).unsigned()
     table.integer('index_publisher', 10).unsigned()

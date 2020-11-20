@@ -1,0 +1,34 @@
+extend type Query {
+  documentStatusMultiple: [DocumentStatus]
+  documentStatus(documentId: Int!): DocumentStatus
+  pageInDocument(documentId: Int!): [Page]
+  keywordInPage(pageId: Int!): [PreTerm]
+}
+
+extend type Mutation {
+  insertPreterm(newPreterm: String!, pageId: Int!): PreTerm,
+  editPreterm(newPreterm: String!, preTermId: Int!): PreTerm,
+  deletePreterm(preTermId: Int!): Boolean,
+  changeStatusPage(pageId: Int!, status: Int!): Boolean,
+  startTfDjango(documentId: Int!): Boolean
+}
+
+type DocumentStatus {
+  documentId: Int,
+  name: String,
+  version: Int,
+  status: Int,
+  pages: [Page]
+}
+
+type Page {
+  pageId: Int,
+  index: Int,
+  name: String,
+  status: Int
+}
+
+type PreTerm {
+  preTermId: Int,
+  preTerm: String
+}
