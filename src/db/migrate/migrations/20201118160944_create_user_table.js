@@ -5,11 +5,11 @@ export async function up(knex) {
     table.increments('user_id').primary()
     table.string('name', 191)
     table.string('surname', 191)
-    table.string('role', 191)
-    table.string('username', 191)
+    table.string('role', 191).notNullable()
+    table.string('username', 191).notNullable()
     table.string('password', 191)
-    table.dateTime('create_at').defaultTo(knex.fn.now())
-    table.integer('active').defaultTo(1)
+    table.dateTime('create_at').defaultTo(knex.fn.now()).notNullable()
+    table.integer('active').defaultTo(1).notNullable()
   })
 }
 
