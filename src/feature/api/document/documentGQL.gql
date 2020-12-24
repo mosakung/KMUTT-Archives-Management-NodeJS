@@ -1,3 +1,84 @@
+extend type Query {
+  document(pk: Int!): ResultDocument
+  documents: TupleResultDocuments
+}
+
+type TupleResultDocuments {
+  statusQuery: Boolean
+  documents: [ResultDocumentCompress]
+}
+
+type ResultDocumentCompress {
+  id: Int,
+  name: String,
+  version: Int,
+  path: String,
+  DC_title: String,
+  DC_title_alternative: String,
+  DC_description_table_of_contents: String,
+  DC_description_summary_or_abstract: String,
+  DC_description_note: String,
+  DC_format: String,
+  DC_format_extent: String,
+  DC_identifier_URL: String,
+  DC_identifier_ISBN: String,
+  DC_source: String,
+  DC_language: String,
+  DC_coverage_spatial: String,
+  DC_coverage_temporal: String,
+  DC_rights: String,
+  DC_rights_access: String,
+  thesis_degree_name: String,
+  thesis_degree_level: String,
+  thesis_degree_discipline: String,
+  thesis_degree_grantor: String,
+  rec_create_at: String,
+  rec_create_by:  Int,
+  rec_modified_at: String,
+  rec_modified_by: Int,
+}
+
+type ResultDocument {
+  statusQuery: Boolean,
+  id: Int,
+  name: String,
+  version: Int,
+  path: String,
+  DC_title: String,
+  DC_title_alternative: String,
+  DC_description_table_of_contents: String,
+  DC_description_summary_or_abstract: String,
+  DC_description_note: String,
+  DC_format: String,
+  DC_format_extent: String,
+  DC_identifier_URL: String,
+  DC_identifier_ISBN: String,
+  DC_source: String,
+  DC_language: String,
+  DC_coverage_spatial: String,
+  DC_coverage_temporal: String,
+  DC_rights: String,
+  DC_rights_access: String,
+  thesis_degree_name: String,
+  thesis_degree_level: String,
+  thesis_degree_discipline: String,
+  thesis_degree_grantor: String,
+  rec_create_at: String,
+  rec_create_by:  Int,
+  rec_modified_at: String,
+  rec_modified_by: Int,
+  DC_keyword: [String],
+  DC_relation: [String],
+  DC_type: [String],
+  creator: String,
+  creator_orgname: String,
+  publisher: String,
+  publisherEmail: String,
+  contributor: String,
+  contributorEmail: String,
+  issued_date: String,
+}
+
 extend type Mutation {
   addDocument(body: AddDocumentInput!): ResultAddDocument
 }
