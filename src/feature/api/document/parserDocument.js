@@ -1,4 +1,4 @@
-const parserDocument = (param, { user }) => {
+export const parserDocument = (param, { user }) => {
   if (!(param.name && param.path && param.DC_title)) { return false }
 
   const document = {
@@ -40,4 +40,16 @@ const parserDocument = (param, { user }) => {
   return document
 }
 
-export default parserDocument
+export const parserResultDcKeyword = (param) => param.map((value) => (
+  value.DC_keyword
+))
+
+export const parserResultDcRelation = (param) => param.map((value) => (
+  value.DC_relation
+))
+
+export const parserResultDcType = (param) => param.map((value) => (
+  value.DC_type
+))
+
+export default {}
