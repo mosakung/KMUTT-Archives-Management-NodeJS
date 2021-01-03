@@ -1,5 +1,7 @@
 import { parserDocument } from './parserDocument'
-import { getDocumentService, getDocumentsService, insertDocumentService } from './documentService'
+import {
+  getDocumentService, getDocumentsService, insertDocumentService, uploadDocumentService,
+} from './documentService'
 
 export const getDocumentController = async (pk) => {
   const respones = await getDocumentService(pk)
@@ -22,8 +24,11 @@ export const getDocumentsController = async () => {
 }
 
 export const insertDocumentController = async (req, context) => {
+  console.log('test')
   const body = { ...req }
+  console.log('test1', body)
   const document = parserDocument(body, context)
+  console.log('test', document)
 
   if (!document) {
     return { status: false, message: 'paserDocument is false', prevBody: {} }
@@ -37,5 +42,7 @@ export const insertDocumentController = async (req, context) => {
 
   return respones
 }
+
+export const uploadDocumentController = async (parent, args) => uploadDocumentService(args.file)
 
 export default {}

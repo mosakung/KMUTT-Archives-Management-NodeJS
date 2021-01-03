@@ -1,3 +1,5 @@
+import { createWriteStream, unlinkSync } from 'fs'
+
 import djangoRequest from '../../django-request/djangoRequest'
 import {
   parserResultDcKeyword,
@@ -147,6 +149,30 @@ export const insertDocumentService = async (document, { user }) => {
     return { status, message, prevBody }
   }
   return false
+}
+
+export const uploadDocumentService = async (fileUpload) => {
+  const {
+    createReadStream, filename, mimetype, encoding,
+  } = await fileUpload
+
+  const stream = createReadStream()
+
+  const uploadDir = `${process.cwd()}/uploadfile`
+  const path = `${uploadDir}/${filename}`
+  await new Promise((resolve, reject) => stream
+    .on('error', (error) => {
+      if (stream.truncated) {
+        // delete the truncated file
+        unlinkSync(path)
+      }
+      reject(error)
+    })
+    .pipe(createWriteStream(path))
+    .on('error', (error) => reject(error))
+    .on('finish', () => resolve({ path })))
+  console.log('-----------file written')
+  return fileUpload
 }
 
 export default {}

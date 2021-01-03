@@ -49,8 +49,15 @@ type ResultDocument {
   issued_date: String,
 }
 
+type File {
+  filename: String!
+  mimetype: String!
+  encoding: String!
+}
+
 extend type Mutation {
   addDocument(body: AddDocumentInput!): ResultAddDocument
+  uploadDocument(file: Upload!): File
 }
 
 input AddDocumentInput {
