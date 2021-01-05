@@ -3,6 +3,7 @@ export const parserDocument = (param, { user }) => {
 
   const document = {
     add_version: param.addVersion,
+    startPage: param.startPage,
     name: param.name,
     path: param.path,
     DC_relation: param.DC_relation ? [...param.DC_relation] : null,

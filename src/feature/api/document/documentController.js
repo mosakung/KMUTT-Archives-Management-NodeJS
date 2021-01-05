@@ -24,11 +24,8 @@ export const getDocumentsController = async () => {
 }
 
 export const insertDocumentController = async (req, context) => {
-  console.log('test')
   const body = { ...req }
-  console.log('test1', body)
   const document = parserDocument(body, context)
-  console.log('test', document)
 
   if (!document) {
     return { status: false, message: 'paserDocument is false', prevBody: {} }
