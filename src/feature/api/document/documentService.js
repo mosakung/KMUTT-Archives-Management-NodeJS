@@ -160,6 +160,7 @@ export const uploadDocumentService = async (fileUpload) => {
 
   const uploadDir = `${process.cwd()}/uploadfile`
   const path = `${uploadDir}/${filename}`
+
   await new Promise((resolve, reject) => stream
     .on('error', (error) => {
       if (stream.truncated) {
@@ -171,8 +172,12 @@ export const uploadDocumentService = async (fileUpload) => {
     .pipe(createWriteStream(path))
     .on('error', (error) => reject(error))
     .on('finish', () => resolve({ path })))
-  console.log('-----------file written')
-  return fileUpload
+
+  const result = {
+    filename, encoding, mimetype, pathFile: path,
+  }
+
+  return result
 }
 
 export default {}
