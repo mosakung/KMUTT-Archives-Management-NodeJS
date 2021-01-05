@@ -106,3 +106,5 @@ dist
 #fileupload
 *.pdf
 
+
+.env.development
