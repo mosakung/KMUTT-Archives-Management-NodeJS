@@ -1,3 +1,4 @@
+import { readFile } from 'fs'
 import * as repo from './documentStatusRepository'
 import djangoRequest from '../../django-request/djangoRequest'
 import { parserDocumentStatus, parserPage, parserPreterm } from './parserDocumentStatus'
@@ -33,6 +34,14 @@ export const keywordInPageService = async (pageId) => {
   const rowsPretermRaw = await repo.selectPretermInPage(pageId)
   const rowsPreterm = parserPreterm(rowsPretermRaw)
   return rowsPreterm
+}
+
+export const imageInPageService = async (documentId, userId, pageId) => {
+  const rowDocumentRaw = await repo.selectDocumentById(documentId, userId)
+  const path = rowDocumentRaw.name.split('.pdf')[0]
+  readFile(`${process.cwd()}/pics/demopic.png`, (err, data) => {
+
+  })
 }
 
 export const insertPretermService = async (newPreterm, pageId) => {

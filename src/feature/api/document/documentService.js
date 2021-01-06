@@ -1,4 +1,4 @@
-import { createWriteStream, unlinkSync } from 'fs'
+import { createWriteStream, unlinkSync, rename } from 'fs'
 
 import djangoRequest from '../../django-request/djangoRequest'
 import {
@@ -153,13 +153,14 @@ export const insertDocumentService = async (document, { user }) => {
 
 export const uploadDocumentService = async (fileUpload) => {
   const {
-    createReadStream, filename, mimetype, encoding,
+    createReadStream, mimetype, encoding,
   } = await fileUpload
 
   const stream = createReadStream()
 
   const uploadDir = `${process.cwd()}/uploadfile`
-  const path = `${uploadDir}/${filename}`
+  const name = `${Date.now() + Math.random()}.pdf`
+  const path = `${uploadDir}/${name}`
 
   await new Promise((resolve, reject) => stream
     .on('error', (error) => {
@@ -174,7 +175,7 @@ export const uploadDocumentService = async (fileUpload) => {
     .on('finish', () => resolve({ path })))
 
   const result = {
-    filename, encoding, mimetype, pathFile: path,
+    filename: name, encoding, mimetype, pathFile: path,
   }
 
   return result

@@ -3,6 +3,7 @@ extend type Query {
   documentStatus(documentId: Int!): DocumentStatus
   pageInDocument(documentId: Int!): [Page]
   keywordInPage(pageId: Int!): [PreTerm]
+  imageInPage(pageId: Int!) : [Image]
 }
 
 extend type Mutation {
@@ -31,4 +32,8 @@ type Page {
 type PreTerm {
   preTermId: Int,
   preTerm: String
+}
+
+type Image {
+  image: String
 }
