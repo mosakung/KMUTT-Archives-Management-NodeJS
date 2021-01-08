@@ -99,6 +99,7 @@ input AddDocumentInput {
 type ResultAddDocument {
   status: Boolean,
   message: String,
+  documentId: Int,
   prevBody: DocumentPrevBody
 }
 
