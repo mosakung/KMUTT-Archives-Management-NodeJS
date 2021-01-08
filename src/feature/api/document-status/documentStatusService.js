@@ -78,7 +78,17 @@ export const startTfDjangoService = async (documentId) => {
   }
   const apiStartTfDjango = 'start-TF/'
   const result = await djangoRequest.post(apiStartTfDjango, objectBody, true)
-  if (result) return true
+  if (result.res) {
+    const {
+      status, message,
+    } = {
+      status: result.output.status,
+      message: result.output.message,
+    }
+    return {
+      status, message,
+    }
+  }
   return false
 }
 

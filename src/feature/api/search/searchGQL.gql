@@ -1,0 +1,23 @@
+extend type Query {
+  searchDocument(fulltext: String!): TupleSearchResult
+}
+
+type TupleSearchResult {
+  documentRelevance: [DocumentRelevance]
+  efficiencyInputSearch: EfficiencyInputSearch
+}
+
+type DocumentRelevance {
+  idDocument: Int,
+  relevanceScore: Float
+}
+
+type EfficiencyInputSearch {
+  fulltext: String,
+  keywordDeepcut: [KeywordDeepcut]
+}
+
+type KeywordDeepcut {
+  keyword: String,
+  used: Boolean
+}

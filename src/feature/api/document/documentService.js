@@ -140,13 +140,18 @@ export const insertDocumentService = async (document, { user }) => {
   const apiInsertDocument = 'add-document/'
   const result = await djangoRequest.post(apiInsertDocument, objectBody, true)
   if (result.res) {
-    const { status, message, prevBody } = {
+    const {
+      status, message, documentId, prevBody,
+    } = {
       status: result.output.status,
       message: result.output.message,
+      documentId: result.output.documentId,
       prevBody: result.output.prev_body.document,
     }
     prevBody.addVersion = prevBody.add_version
-    return { status, message, prevBody }
+    return {
+      status, message, documentId, prevBody,
+    }
   }
   return false
 }

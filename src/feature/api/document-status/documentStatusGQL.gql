@@ -10,7 +10,12 @@ extend type Mutation {
   editPreterm(newPreterm: String!, preTermId: Int!): PreTerm,
   deletePreterm(preTermId: Int!): Boolean,
   changeStatusPage(pageId: Int!, status: Int!): Boolean,
-  startTfDjango(documentId: Int!): Boolean
+  startTfDjango(documentId: Int!): ResultStartTF
+}
+
+type ResultStartTF {
+  status: Boolean,
+  message: String,
 }
 
 type DocumentStatus {
