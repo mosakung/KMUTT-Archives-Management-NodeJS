@@ -10,7 +10,6 @@ import {
   deletePretermController,
   changeStatusPageController,
   startTfDjangoController,
-  imageInPageController,
 } from './documentStatusController'
 
 const fileGraphqlType = readFileSync(`${__dirname}/documentStatusGQL.gql`, 'utf8')
@@ -22,8 +21,7 @@ export const documentStatusResolver = {
     documentStatusMultiple: (_, __, context) => documentStatusMultipleController(context),
     documentStatus: (_, param, context) => documentStatusController(param, context),
     pageInDocument: (_, param) => pageInDocumentController(param),
-    keywordInPage: (_, param) => keywordInPageController(param),
-    imageInPage: (_, param) => imageInPageController(param),
+    keywordInPage: (_, param, context) => keywordInPageController(param, context),
   },
   Mutation: {
     insertPreterm: (_, param, context) => insertPretermController(param, context),

@@ -10,7 +10,7 @@ export const selectDocumentNotDone = async (userId) => {
 
 export const selectDocumentById = async (documentId, userId) => {
   const result = await db
-    .select('document_id', 'name', 'version', 'status_process_document')
+    .select('document_id', 'name', 'version', 'status_process_document', 'path_image')
     .from('document')
     .where('document_id', documentId)
     .andWhere('rec_create_by', userId)
@@ -20,6 +20,10 @@ export const selectDocumentById = async (documentId, userId) => {
 export const selectPageInDocument = async (documentId) => db.select().from('page_in_document').where('index_document_id', documentId)
 
 export const selectPretermInPage = async (pageId) => db.select().from('pre_term_in_page').where('index_page_in_document_id', pageId)
+
+export const selectPageInDocumentWithId = async (documentId, pageId) => (
+  db.select().from('page_in_document').where('index_document_id', documentId).andWhere('page_index', pageId)
+)
 
 export const insertPreterm = async (newPreterm, pageId) => {
   const row = await db
