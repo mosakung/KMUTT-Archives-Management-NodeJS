@@ -8,7 +8,6 @@ import {
   deletePretermService,
   changeStatusPageService,
   startTfDjangoService,
-  imageInPageService,
   overridePertermService,
 } from './documentStatusService'
 
@@ -24,9 +23,7 @@ export const documentStatusController = async ({ documentId }, { user }) => {
 
 export const pageInDocumentController = async ({ documentId }) => pageInDocumentService(documentId)
 
-export const keywordInPageController = async ({ pageId }) => keywordInPageService(pageId)
-
-export const imageInPageController = async ({ documentId, pageId }, { user }) => imageInPageService(documentId, user.id, pageId)
+export const keywordInPageController = async ({ documentId, pageId }, { user }) => keywordInPageService(documentId, user.id, pageId)
 
 export const insertPretermController = async ({ newPreterm, pageId }) => insertPretermService(newPreterm, pageId)
 
