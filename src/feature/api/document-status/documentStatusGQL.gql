@@ -65,7 +65,8 @@ type Page {
 type PageDetail {
   PreTerms: [PreTerm],
   maxPage: Int,
-  image: String
+  image: String,
+  pageId: Int
 }
 
 type PreTerm {

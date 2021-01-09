@@ -33,7 +33,9 @@ export const pageInDocumentService = async (documentId) => {
 export const keywordInPageService = async (documentId, userId, pageId) => {
   const pageInDB = await repo.selectPageInDocumentWithId(documentId, pageId)
   let rowsPreterm = ['']
+  let pageDBId = -1
   if (pageInDB.length !== 0) {
+    pageDBId = pageInDB[0].page_in_document_id
     const rowsPretermRaw = await repo.selectPretermInPage(pageInDB[0].page_in_document_id)
     rowsPreterm = parser.preterm(rowsPretermRaw)
   }
@@ -45,7 +47,7 @@ export const keywordInPageService = async (documentId, userId, pageId) => {
     }
     return data
   })
-  return { PreTerms: rowsPreterm, image: resultImage }
+  return { PreTerms: rowsPreterm, image: resultImage, pageId: pageDBId }
 }
 
 export const insertPretermService = async (newPreterm, pageId) => {
