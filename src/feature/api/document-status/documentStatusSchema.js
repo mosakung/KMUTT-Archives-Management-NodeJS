@@ -11,6 +11,7 @@ import {
   changeStatusPageController,
   startTfDjangoController,
   imageInPageController,
+  overridePertermController,
 } from './documentStatusController'
 
 const fileGraphqlType = readFileSync(`${__dirname}/documentStatusGQL.gql`, 'utf8')
@@ -29,6 +30,7 @@ export const documentStatusResolver = {
     insertPreterm: (_, param, context) => insertPretermController(param, context),
     editPreterm: (_, param, context) => editPretermController(param, context),
     deletePreterm: (_, param, context) => deletePretermController(param, context),
+    overridePerterm: (_, param) => overridePertermController(param),
     changeStatusPage: (_, param, context) => changeStatusPageController(param, context),
     startTfDjango: (_, param, context) => startTfDjangoController(param, context),
   },
