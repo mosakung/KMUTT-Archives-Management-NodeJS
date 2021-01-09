@@ -13,7 +13,10 @@ type ResultDocument {
   id: Int,
   name: String,
   version: Int,
+  pageStart: Int,
+  amountPage: Int,
   path: String,
+  pathImage: String,
   DC_title: String,
   DC_title_alternative: String,
   DC_description_table_of_contents: String,
@@ -27,6 +30,7 @@ type ResultDocument {
   DC_language: String,
   DC_coverage_spatial: String,
   DC_coverage_temporal: String,
+  DC_coverage_temporal_year: String,
   DC_rights: String,
   DC_rights_access: String,
   thesis_degree_name: String,
@@ -81,6 +85,7 @@ input AddDocumentInput {
   DC_language: String
   DC_coverage_spatial: String
   DC_coverage_temporal: String
+  DC_coverage_temporal_year: String
   DC_rights: String
   DC_rights_access: String
   thesis_degree_name: String
