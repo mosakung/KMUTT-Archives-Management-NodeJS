@@ -2,8 +2,7 @@ extend type Query {
   documentStatusMultiple: [DocumentStatus]
   documentStatus(documentId: Int!): DocumentStatus
   pageInDocument(documentId: Int!): [Page]
-  keywordInPage(pageId: Int!): [PreTerm]
-  imageInPage(pageId: Int!) : [Image]
+  keywordInPage(pageId: Int!, documentId: Int!): PageDetail
 }
 
 extend type Mutation {
@@ -11,7 +10,12 @@ extend type Mutation {
   editPreterm(newPreterm: String!, preTermId: Int!): PreTerm,
   deletePreterm(preTermId: Int!): Boolean,
   changeStatusPage(pageId: Int!, status: Int!): Boolean,
-  startTfDjango(documentId: Int!): Boolean
+  startTfDjango(documentId: Int!): ResultStartTF
+}
+
+type ResultStartTF {
+  status: Boolean,
+  message: String,
 }
 
 type DocumentStatus {
@@ -31,9 +35,15 @@ type Page {
   status: Int
 }
 
+type PageDetail {
+  PreTerms: [PreTerm],
+  maxPage: Int,
+  image: String
+}
+
 type PreTerm {
   preTermId: Int,
-  preTerm: String
+  preTerm: String,
 }
 
 type Image {

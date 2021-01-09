@@ -1,4 +1,4 @@
-import { readFile } from 'fs'
+import { readFileSync } from 'fs'
 import * as repo from './documentStatusRepository'
 import djangoRequest from '../../django-request/djangoRequest'
 import { parserDocumentStatus, parserPage, parserPreterm } from './parserDocumentStatus'
@@ -30,18 +30,22 @@ export const pageInDocumentService = async (documentId) => {
   return rowsPage
 }
 
-export const keywordInPageService = async (pageId) => {
-  const rowsPretermRaw = await repo.selectPretermInPage(pageId)
-  const rowsPreterm = parserPreterm(rowsPretermRaw)
-  return rowsPreterm
-}
-
-export const imageInPageService = async (documentId, userId, pageId) => {
+export const keywordInPageService = async (documentId, userId, pageId) => {
+  const pageInDB = await repo.selectPageInDocumentWithId(documentId, pageId)
+  let rowsPreterm = ['']
+  if (pageInDB.length !== 0) {
+    const rowsPretermRaw = await repo.selectPretermInPage(pageInDB[0].page_in_document_id)
+    rowsPreterm = parserPreterm(rowsPretermRaw)
+  }
   const rowDocumentRaw = await repo.selectDocumentById(documentId, userId)
-  const path = rowDocumentRaw.name.split('.pdf')[0]
-  readFile(`${process.cwd()}/pics/demopic.png`, (err, data) => {
-
+  const path = rowDocumentRaw[0].path_image
+  const resultImage = readFileSync(`${path}/page${pageId}.jpg`, { encoding: 'base64' }, (error, data) => {
+    if (error) {
+      return error
+    }
+    return data
   })
+  return { PreTerms: rowsPreterm, image: resultImage }
 }
 
 export const insertPretermService = async (newPreterm, pageId) => {
@@ -74,7 +78,17 @@ export const startTfDjangoService = async (documentId) => {
   }
   const apiStartTfDjango = 'start-TF/'
   const result = await djangoRequest.post(apiStartTfDjango, objectBody, true)
-  if (result) return true
+  if (result.res) {
+    const {
+      status, message,
+    } = {
+      status: result.output.status,
+      message: result.output.message,
+    }
+    return {
+      status, message,
+    }
+  }
   return false
 }
 

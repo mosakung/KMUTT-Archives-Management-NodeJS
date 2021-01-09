@@ -63,11 +63,11 @@ extend type Mutation {
 
 input AddDocumentInput {
   addVersion: Boolean
-  startPage: String!
+  startPage: Int!
   name: String!
   path: String!
   DC_relation: [String]
-  DC_type: String
+  DC_type: [String]
   DC_title: String!
   DC_title_alternative: String
   DC_description_table_of_contents: String
@@ -99,6 +99,7 @@ input AddDocumentInput {
 type ResultAddDocument {
   status: Boolean,
   message: String,
+  documentId: Int,
   prevBody: DocumentPrevBody
 }
 
