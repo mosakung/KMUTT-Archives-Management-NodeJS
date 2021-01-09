@@ -2,9 +2,11 @@ import db from '../../../db/initializing'
 
 export const selectDocumentNotDone = async (userId) => {
   const result = await db
-    .select('document_id', 'name', 'version', 'status_process_document')
+    .select('document_id', 'name', 'version', 'status_process_document', 'DC_title', 'rec_create_at')
     .from('document')
     .where('rec_create_by', userId)
+    .having('status_process_document', '<', '4')
+    .orderBy('status_process_document', 'desc')
   return result
 }
 

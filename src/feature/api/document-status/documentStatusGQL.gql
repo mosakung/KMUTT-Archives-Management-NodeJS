@@ -19,7 +19,9 @@ type DocumentStatus {
   name: String,
   version: Int,
   status: Int,
-  pages: [Page]
+  pages: [Page],
+  title: String,
+  publish:String,
 }
 
 type Page {
