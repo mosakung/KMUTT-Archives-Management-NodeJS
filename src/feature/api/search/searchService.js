@@ -45,7 +45,10 @@ export const searchService = async (fulltext) => {
     return { idDocument: element.docId, relevanceScore: score }
   })
 
+  documentRelevanceSet.sort((n1, n2) => n2.relevanceScore - n1.relevanceScore)
+
   const result = {
+    foundDocument: documentRelevanceSet.length,
     documentRelevance: documentRelevanceSet,
     efficiencyInputSearch: {
       fulltext,

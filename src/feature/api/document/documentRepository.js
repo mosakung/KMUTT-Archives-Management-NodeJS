@@ -1,13 +1,13 @@
 import db from '../../../db/initializing'
 
 export const selectDocuments = async () => {
-  const result = await db.select().from('document').where('status_process_document', 2)
+  const result = await db.select().from('document').where('status_process_document', 5)
 
   return result
 }
 
 export const selectDocument = async (pk) => {
-  const result = await db.select().from('document').where('status_process_document', 2).andWhere('document_id', pk)
+  const result = await db.select().from('document').where('status_process_document', 5).andWhere('document_id', pk)
   return result[0]
 }
 
@@ -28,7 +28,7 @@ export const selectDcType = async (pkDocument) => {
 
 export const selectIndexingContributorDocument = async (pk) => {
   if (pk === null || pk === undefined) return {}
-  const result = await db.select().from('indexing_contributor_document').where('indexing_publisher_id', pk)
+  const result = await db.select().from('indexing_contributor_document').where('indexing_contributor_id', pk)
   return result[0]
 }
 export const selectIndexingCreatorDocument = async (pk) => {
