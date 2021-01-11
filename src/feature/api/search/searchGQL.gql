@@ -3,7 +3,8 @@ extend type Query {
 }
 
 type TupleSearchResult {
-  documentRelevance: [DocumentRelevance]
+  foundDocument: Int,
+  documentRelevance: [DocumentRelevance],
   efficiencyInputSearch: EfficiencyInputSearch
 }
 
