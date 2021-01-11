@@ -8,6 +8,7 @@ import {
   deletePretermService,
   changeStatusPageService,
   startTfDjangoService,
+  overridePertermService,
 } from './documentStatusService'
 
 export const documentStatusMultipleController = async ({ user }) => {
@@ -29,6 +30,8 @@ export const insertPretermController = async ({ newPreterm, pageId }) => insertP
 export const editPretermController = async ({ newPreterm, preTermId }) => editPretermService(newPreterm, preTermId)
 
 export const deletePretermController = async ({ preTermId }) => deletePretermService(preTermId)
+
+export const overridePertermController = async ({ newInformation }) => overridePertermService(newInformation)
 
 export const changeStatusPageController = async ({ pageId, status }) => changeStatusPageService(pageId, status)
 

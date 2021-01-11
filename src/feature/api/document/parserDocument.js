@@ -3,7 +3,7 @@ export const parserDocument = (param, { user }) => {
 
   const document = {
     add_version: param.addVersion,
-    startPage: param.startPage,
+    page_start: param.startPage,
     name: param.name,
     path: param.path,
     DC_relation: param.DC_relation ? [...param.DC_relation] : null,
@@ -20,6 +20,7 @@ export const parserDocument = (param, { user }) => {
     DC_source: param.DC_source !== '' ? param.DC_source : null,
     DC_language: param.DC_language !== '' ? param.DC_language : null,
     DC_coverage_spatial: param.DC_coverage_spatial !== '' ? param.DC_coverage_spatial : null,
+    DC_coverage_temporal_year: param.DC_coverage_temporal_year !== '' ? param.DC_coverage_temporal_year : null,
     DC_coverage_temporal: param.DC_coverage_temporal !== '' ? param.DC_coverage_temporal : null,
     DC_rights: param.DC_rights !== '' ? param.DC_rights : null,
     DC_rights_access: param.DC_rights_access !== '' ? param.DC_rights_access : null,
