@@ -3,7 +3,7 @@ import db from '../../../db/initializing'
 const documentStatusRepository = {
   selectDocumentNotDone: async (userId) => {
     const result = await db
-      .select('document_id', 'name', 'version', 'status_process_document', 'DC_title', 'rec_create_at')
+      .select('document_id', 'rec_create_at', 'name', 'version', 'status_process_document', 'DC_title')
       .from('document')
       .where('rec_create_by', userId)
       .having('status_process_document', '<', '4')
@@ -12,7 +12,7 @@ const documentStatusRepository = {
   },
   selectDocumentById: async (documentId, userId) => {
     const result = await db
-      .select('document_id', 'name', 'version', 'status_process_document', 'path_image')
+      .select('document_id', 'name', 'version', 'status_process_document', 'path_image', 'rec_create_at', 'DC_title')
       .from('document')
       .where('document_id', documentId)
       .andWhere('rec_create_by', userId)
