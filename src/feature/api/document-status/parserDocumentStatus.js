@@ -1,11 +1,16 @@
 const parserDocumentStatus = {
   documentStatus: (rows) => {
-    const defineParser = rows.map((row) => ({
-      documentId: row.document_id,
-      name: row.name,
-      version: row.version,
-      status: row.status_process_document,
-    }))
+    const defineParser = rows.map((row) => {
+      const d = row.rec_create_at
+      const publishs = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`
+      return ({
+        documentId: row.document_id,
+        name: row.name,
+        version: row.version,
+        status: row.status_process_document,
+        publish: publishs,
+      })
+    })
     return defineParser
   },
   page: (rows) => {
