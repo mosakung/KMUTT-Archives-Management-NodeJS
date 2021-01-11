@@ -5,6 +5,7 @@ const parserDocumentStatus = {
       const publishs = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`
       return ({
         documentId: row.document_id,
+        title: row.DC_title,
         name: row.name,
         version: row.version,
         status: row.status_process_document,
