@@ -9,7 +9,7 @@ extend type Mutation {
   insertPreterm(newPreterm: String!, pageId: Int!): PreTerm,
   editPreterm(newPreterm: String!, preTermId: Int!): PreTerm,
   deletePreterm(preTermId: Int!): Boolean,
-  overridePerterm(newInformation: InputSeleceOverridePerterm!): ResultOverridePerterm,
+  overridePerterm(newInformation: InputSeleceOverridePerterm!, documentId: Int!): ResultOverridePerterm,
   changeStatusPage(pageId: Int!, status: Int!): Boolean,
   startTfDjango(documentId: Int!): ResultStartTF
 }
@@ -27,7 +27,6 @@ input InputOverridePerterm {
 input InputNewPagePerTerm {
   pageIndex: Int!,
   name: String,
-  documentId: Int!,
   token: [String]
 }
 

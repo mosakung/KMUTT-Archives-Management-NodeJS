@@ -78,6 +78,14 @@ const documentStatusRepository = {
     if (result.length === 0) return false
     return true
   },
+  checkDocumentStatusIs3: async (documentId) => {
+    const result = await db.select()
+      .from('document')
+      .where('status_process_document', 3)
+      .andWhere('document_id', documentId)
+    if (result.length === 0) return false
+    return true
+  },
 }
 
 export default documentStatusRepository

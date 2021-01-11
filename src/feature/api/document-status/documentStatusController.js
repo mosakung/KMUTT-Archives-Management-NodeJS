@@ -31,7 +31,7 @@ export const editPretermController = async ({ newPreterm, preTermId }) => editPr
 
 export const deletePretermController = async ({ preTermId }) => deletePretermService(preTermId)
 
-export const overridePertermController = async ({ newInformation }) => overridePertermService(newInformation)
+export const overridePertermController = async ({ newInformation, documentId }) => overridePertermService(newInformation, documentId)
 
 export const changeStatusPageController = async ({ pageId, status }) => changeStatusPageService(pageId, status)
 

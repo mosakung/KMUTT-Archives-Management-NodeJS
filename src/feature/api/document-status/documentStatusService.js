@@ -66,25 +66,31 @@ export const deletePretermService = async (preTermId) => {
   return false
 }
 
-export const overridePertermService = async ({ overide, newPage }) => {
-  await Promise.all(overide.map(async (element) => {
-    await repo.clearPertermInPage(element.pageId)
-    const bodyParser = parser.overide(element.pageId, element.token)
-    await repo.overidePertermInPage(bodyParser)
-    return true
-  }))
+export const overridePertermService = async ({ overide, newPage }, documentId) => {
+  const permission = await repo.checkDocumentStatusIs3(documentId)
 
-  const logAddNewPage = await Promise.all(newPage.map(async (element) => {
-    const checkPageStatus = repo.checkIndexInPage(element.documentId, element.pageIndex)
-    if (checkPageStatus) return { pageIndex: element.pageIndex, documentId: element.documentId, status: false }
-    const row = await repo.addNewPage(element.pageIndex, element.name, element.documentId)
-    const PageId = row[0]
-    const bodyParser = parser.overide(PageId, element.token)
-    await repo.overidePertermInPage(bodyParser)
-    return { pageIndex: element.pageIndex, documentId: element.documentId, status: true }
-  }))
+  if (permission) {
+    await Promise.all(overide.map(async (element) => {
+      await repo.clearPertermInPage(element.pageId)
+      const bodyParser = parser.overide(element.pageId, element.token)
+      await repo.overidePertermInPage(bodyParser)
+      return true
+    }))
 
-  return { overidestatus: true, addNewStatus: logAddNewPage }
+    const logAddNewPage = await Promise.all(newPage.map(async (element) => {
+      const checkPageStatus = await repo.checkIndexInPage(documentId, element.pageIndex)
+      if (checkPageStatus) return { pageIndex: element.pageIndex, documentId, status: false }
+      const row = await repo.addNewPage(element.pageIndex, element.name, documentId)
+      const PageId = row[0]
+      const bodyParser = parser.overide(PageId, element.token)
+      await repo.overidePertermInPage(bodyParser)
+      return { pageIndex: element.pageIndex, documentId, status: true }
+    }))
+
+    return { overidestatus: true, addNewStatus: logAddNewPage }
+  }
+
+  return { overidestatus: false, addNewStatus: [] }
 }
 
 export const changeStatusPageService = async (pageId, status) => {
