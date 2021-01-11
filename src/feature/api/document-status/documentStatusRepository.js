@@ -6,7 +6,7 @@ const documentStatusRepository = {
       .select('document_id', 'rec_create_at', 'name', 'version', 'status_process_document', 'DC_title')
       .from('document')
       .where('rec_create_by', userId)
-      .having('status_process_document', '<', '4')
+      .having('status_process_document', '<', '6')
       .orderBy('status_process_document', 'desc')
     return result
   },
