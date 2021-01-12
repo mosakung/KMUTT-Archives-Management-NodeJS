@@ -51,6 +51,7 @@ type ResultDocument {
   contributor: String,
   contributorEmail: String,
   issued_date: String,
+  tag: [String],
 }
 
 type File {
