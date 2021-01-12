@@ -9,6 +9,7 @@ import {
   changeStatusPageService,
   startTfDjangoService,
   overridePertermService,
+  amountPageService,
 } from './documentStatusService'
 
 export const documentStatusMultipleController = async ({ user }) => {
@@ -36,5 +37,7 @@ export const overridePertermController = async ({ newInformation, documentId }) 
 export const changeStatusPageController = async ({ pageId, status }) => changeStatusPageService(pageId, status)
 
 export const startTfDjangoController = async ({ documentId }) => startTfDjangoService(documentId)
+
+export const amountPageController = async ({ documentId }, { user }) => amountPageService(documentId, user.id)
 
 export default {}

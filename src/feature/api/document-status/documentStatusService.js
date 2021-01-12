@@ -125,4 +125,9 @@ export const startTfDjangoService = async (documentId) => {
   return false
 }
 
+export const amountPageService = async (documentId, userId) => {
+  const result = await repo.selectPageAmount(documentId, userId)
+  return { firstPage: result[0].page_start, lastPage: result[0].amount_page + result[0].page_start - 1, status: result[0].status_process_document }
+}
+
 export default {}

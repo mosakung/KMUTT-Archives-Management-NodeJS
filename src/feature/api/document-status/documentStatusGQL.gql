@@ -3,6 +3,7 @@ extend type Query {
   documentStatus(documentId: Int!): DocumentStatus
   pageInDocument(documentId: Int!): [Page]
   keywordInPage(pageId: Int!, documentId: Int!): PageDetail
+  amountPage(documentId: Int!): ResultAmountPage
 }
 
 extend type Mutation {
@@ -33,6 +34,12 @@ input InputNewPagePerTerm {
 type ResultOverridePerterm {
   overidestatus: Boolean,
   addNewStatus: [ResultAddNewStatus]
+}
+
+type ResultAmountPage{
+  firstPage: Int,
+  lastPage: Int,
+  status: Int
 }
 
 type ResultAddNewStatus {

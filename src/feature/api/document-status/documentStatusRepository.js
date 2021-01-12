@@ -88,6 +88,12 @@ const documentStatusRepository = {
     if (result.length === 0) return false
     return true
   },
+  selectPageAmount: async (documentId, userId) => {
+    const result = await db.select('page_start', 'amount_page', 'status_process_document').from('document')
+      .where('document_id', documentId)
+      .andWhere('rec_create_by', userId)
+    return result
+  },
 }
 
 export default documentStatusRepository
