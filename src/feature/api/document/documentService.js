@@ -1,35 +1,21 @@
-import { createWriteStream, unlinkSync, rename } from 'fs'
+import { createWriteStream, unlinkSync } from 'fs'
 
 import djangoRequest from '../../django-request/djangoRequest'
-import {
-  parserResultDcKeyword,
-  parserResultDcRelation,
-  parserResultDcType,
-} from './parserDocument'
+import parser from './parserDocument'
 
-import {
-  selectDocument,
-  selectDocuments,
-  selectDcKeyword,
-  selectDcRelation,
-  selectDcType,
-  selectIndexingContributorDocument,
-  selectIndexingCreatorDocument,
-  selectIndexingCreatorOrgnameDocument,
-  selectIndexingIssuedDateDocument,
-  selectIndexingPublisherDocument,
-} from './documentRepository'
+import repo from './documentRepository'
 
 export const getDocumentService = async (pk) => {
-  const rowDocument = await selectDocument(pk)
-  const rowsKeyword = await selectDcKeyword(pk)
-  const rowsRelation = await selectDcRelation(pk)
-  const rowsType = await selectDcType(pk)
-  const rowCreator = await selectIndexingCreatorDocument(rowDocument.index_creator)
-  const rowCreatorOrgname = await selectIndexingCreatorOrgnameDocument(rowDocument.index_creator_orgname)
-  const rowPublisher = await selectIndexingPublisherDocument(rowDocument.index_publisher)
-  const rowContributor = await selectIndexingContributorDocument(rowDocument.index_contributor)
-  const rowIssuedDate = await selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
+  const rowDocument = await repo.selectDocument(pk)
+  const rowsKeyword = await repo.selectDcKeyword(pk)
+  const rowsRelation = await repo.selectDcRelation(pk)
+  const rowsType = await repo.selectDcType(pk)
+  const rowCreator = await repo.selectIndexingCreatorDocument(rowDocument.index_creator)
+  const rowCreatorOrgname = await repo.selectIndexingCreatorOrgnameDocument(rowDocument.index_creator_orgname)
+  const rowPublisher = await repo.selectIndexingPublisherDocument(rowDocument.index_publisher)
+  const rowContributor = await repo.selectIndexingContributorDocument(rowDocument.index_contributor)
+  const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
+  const top10Tag = await repo.selectTopNTag(pk, 10)
 
   const result = {
     id: rowDocument.document_id,
@@ -63,9 +49,9 @@ export const getDocumentService = async (pk) => {
     rec_create_by: rowDocument.rec_create_by,
     rec_modified_at: rowDocument.rec_modified_at,
     rec_modified_by: rowDocument.rec_modified_by,
-    DC_keyword: parserResultDcKeyword(rowsKeyword),
-    DC_relation: parserResultDcRelation(rowsRelation),
-    DC_type: parserResultDcType(rowsType),
+    DC_keyword: parser.resultDcKeyword(rowsKeyword),
+    DC_relation: parser.resultDcRelation(rowsRelation),
+    DC_type: parser.resultDcType(rowsType),
     creator: rowCreator.creator,
     creator_orgname: rowCreatorOrgname.creator_orgname,
     publisher: rowPublisher.publisher,
@@ -73,24 +59,26 @@ export const getDocumentService = async (pk) => {
     contributor: rowContributor.contributor,
     contributorEmail: rowContributor.contributor_role,
     issued_date: rowIssuedDate.issued_date,
+    tag: top10Tag,
   }
 
   return result
 }
 
 export const getDocumentsService = async () => {
-  const rows = await selectDocuments()
+  const rows = await repo.selectDocuments()
 
   const rowsWithDetail = rows.map(async (value) => {
     const pk = value.document_id
-    const rowsKeyword = await selectDcKeyword(pk)
-    const rowsRelation = await selectDcRelation(pk)
-    const rowsType = await selectDcType(pk)
-    const rowCreator = await selectIndexingCreatorDocument(value.index_creator)
-    const rowCreatorOrgname = await selectIndexingCreatorOrgnameDocument(value.index_creator_orgname)
-    const rowPublisher = await selectIndexingPublisherDocument(value.index_publisher)
-    const rowContributor = await selectIndexingContributorDocument(value.index_contributor)
-    const rowIssuedDate = await selectIndexingIssuedDateDocument(value.index_issued_date)
+    const rowsKeyword = await repo.selectDcKeyword(pk)
+    const rowsRelation = await repo.selectDcRelation(pk)
+    const rowsType = await repo.selectDcType(pk)
+    const rowCreator = await repo.selectIndexingCreatorDocument(value.index_creator)
+    const rowCreatorOrgname = await repo.selectIndexingCreatorOrgnameDocument(value.index_creator_orgname)
+    const rowPublisher = await repo.selectIndexingPublisherDocument(value.index_publisher)
+    const rowContributor = await repo.selectIndexingContributorDocument(value.index_contributor)
+    const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(value.index_issued_date)
+    const top10Tag = await repo.selectTopNTag(pk, 10)
 
     return {
       id: value.document_id,
@@ -124,9 +112,9 @@ export const getDocumentsService = async () => {
       rec_create_by: value.rec_create_by,
       rec_modified_at: value.rec_modified_at,
       rec_modified_by: value.rec_modified_by,
-      DC_keyword: parserResultDcKeyword(rowsKeyword),
-      DC_relation: parserResultDcRelation(rowsRelation),
-      DC_type: parserResultDcType(rowsType),
+      DC_keyword: parser.resultDcKeyword(rowsKeyword),
+      DC_relation: parser.resultDcRelation(rowsRelation),
+      DC_type: parser.resultDcType(rowsType),
       creator: rowCreator.creator,
       creator_orgname: rowCreatorOrgname.creator_orgname,
       publisher: rowPublisher.publisher,
@@ -134,6 +122,7 @@ export const getDocumentsService = async () => {
       contributor: rowContributor.contributor,
       contributorEmail: rowContributor.contributor_role,
       issued_date: rowIssuedDate.issued_date,
+      tag: top10Tag,
     }
   })
 

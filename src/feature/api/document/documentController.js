@@ -1,4 +1,4 @@
-import { parserDocument } from './parserDocument'
+import parser from './parserDocument'
 import {
   getDocumentService, getDocumentsService, insertDocumentService, uploadDocumentService,
 } from './documentService'
@@ -25,7 +25,7 @@ export const getDocumentsController = async () => {
 
 export const insertDocumentController = async (req, context) => {
   const body = { ...req }
-  const document = parserDocument(body, context)
+  const document = parser.document(body, context)
 
   if (!document) {
     return { status: false, message: 'paserDocument is false', prevBody: {} }
