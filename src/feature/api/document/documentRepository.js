@@ -2,12 +2,12 @@ import db from '../../../db/initializing'
 
 const documentRepository = {
   selectDocuments: async () => {
-    const result = await db.select().from('document').where('status_process_document', 5)
+    const result = await db.select().from('document').where('status_process_document', 6)
 
     return result
   },
   selectDocument: async (pk) => {
-    const result = await db.select().from('document').where('status_process_document', 5).andWhere('document_id', pk)
+    const result = await db.select().from('document').where('status_process_document', 6).andWhere('document_id', pk)
     return result[0]
   },
   selectDcKeyword: async (pkDocument) => {
@@ -49,14 +49,15 @@ const documentRepository = {
   },
   selectTopNTag: async (pk, limit) => {
     const rowScores = await db
-      .select('index_term_word_id', 'score_tf_idf')
+      .select('index_term_word_id', 'score_tf_idf', 'score_id')
       .from('score')
       .where('index_document_id', pk)
+      .andWhere('rec_status', 1)
       .orderBy('score_tf_idf', 'desc')
       .limit(limit)
     const result = await Promise.all(rowScores.map(async (element) => {
       const rowTerm = await db.select('term').from('term_word').where('term_word_id', element.index_term_word_id)
-      return rowTerm[0].term
+      return { tag: rowTerm[0].term, scoreId: element.score_id }
     }))
     return result
   },

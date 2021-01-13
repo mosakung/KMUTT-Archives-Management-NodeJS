@@ -10,7 +10,14 @@ export const documentStatusMultipleService = async (userId) => {
     const { documentId } = row
     const rowsPageRaw = await repo.selectPageInDocument(documentId)
     const rowsPage = parser.page(rowsPageRaw)
-    return { ...row, pages: rowsPage }
+    const path = row.pathImage
+    const resultImage = readFileSync(`${path}/page${row.pageStart}.jpg`, { encoding: 'base64' }, (error, data) => {
+      if (error) {
+        return error
+      }
+      return data
+    })
+    return { ...row, pages: rowsPage, image: resultImage }
   }))
 
   return documentSet
@@ -21,7 +28,14 @@ export const documentStatusService = async (documentId, userId) => {
   const rowDocument = parser.documentStatus(rowDocumentRaw)
   const rowsPageRaw = await repo.selectPageInDocument(documentId)
   const rowsPage = parser.page(rowsPageRaw)
-  return { ...rowDocument[0], pages: rowsPage }
+  const path = rowDocumentRaw[0].path_image
+  const resultImage = readFileSync(`${path}/page${rowDocumentRaw[0].page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+    if (error) {
+      return error
+    }
+    return data
+  })
+  return { ...rowDocument[0], pages: rowsPage, image: resultImage }
 }
 
 export const pageInDocumentService = async (documentId) => {
@@ -123,6 +137,11 @@ export const startTfDjangoService = async (documentId) => {
     }
   }
   return false
+}
+
+export const amountPageService = async (documentId, userId) => {
+  const result = await repo.selectPageAmount(documentId, userId)
+  return { firstPage: result[0].page_start, lastPage: result[0].amount_page + result[0].page_start - 1, status: result[0].status_process_document }
 }
 
 export default {}

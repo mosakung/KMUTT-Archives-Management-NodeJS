@@ -1,4 +1,4 @@
-import { createWriteStream, unlinkSync } from 'fs'
+import { createWriteStream, unlinkSync, readFileSync } from 'fs'
 
 import djangoRequest from '../../django-request/djangoRequest'
 import parser from './parserDocument'
@@ -16,6 +16,12 @@ export const getDocumentService = async (pk) => {
   const rowContributor = await repo.selectIndexingContributorDocument(rowDocument.index_contributor)
   const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
   const top10Tag = await repo.selectTopNTag(pk, 10)
+  const resultImage = readFileSync(`${rowDocument.path_image}/page${rowDocument.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+    if (error) {
+      return error
+    }
+    return data
+  })
 
   const result = {
     id: rowDocument.document_id,
@@ -25,41 +31,43 @@ export const getDocumentService = async (pk) => {
     amountPage: rowDocument.amount_page,
     path: rowDocument.path,
     pathImage: rowDocument.path_image,
-    DC_title: rowDocument.DC_title,
-    DC_title_alternative: rowDocument.DC_title_alternative,
-    DC_description_table_of_contents: rowDocument.DC_description_table_of_contents,
-    DC_description_summary_or_abstract: rowDocument.DC_description_summary_or_abstract,
-    DC_description_note: rowDocument.DC_description_note,
-    DC_format: rowDocument.DC_format,
-    DC_format_extent: rowDocument.DC_format_extent,
-    DC_identifier_URL: rowDocument.DC_identifier_URL,
-    DC_identifier_ISBN: rowDocument.DC_identifier_ISBN,
-    DC_source: rowDocument.DC_source,
-    DC_language: rowDocument.DC_language,
-    DC_coverage_spatial: rowDocument.DC_coverage_spatial,
-    DC_coverage_temporal: rowDocument.DC_coverage_temporal,
-    DC_coverage_temporal_year: rowDocument.DC_coverage_temporal_year,
-    DC_rights: rowDocument.DC_rights,
-    DC_rights_access: rowDocument.DC_rights_access,
-    thesis_degree_name: rowDocument.thesis_degree_name,
-    thesis_degree_level: rowDocument.thesis_degree_level,
-    thesis_degree_discipline: rowDocument.thesis_degree_discipline,
-    thesis_degree_grantor: rowDocument.thesis_degree_grantor,
-    rec_create_at: rowDocument.rec_create_at,
-    rec_create_by: rowDocument.rec_create_by,
-    rec_modified_at: rowDocument.rec_modified_at,
-    rec_modified_by: rowDocument.rec_modified_by,
-    DC_keyword: parser.resultDcKeyword(rowsKeyword),
-    DC_relation: parser.resultDcRelation(rowsRelation),
-    DC_type: parser.resultDcType(rowsType),
+    title: rowDocument.DC_title,
+    titleAlternative: rowDocument.DC_title_alternative,
+    tableOfContents: rowDocument.DC_description_table_of_contents,
+    abstract: rowDocument.DC_description_summary_or_abstract,
+    note: rowDocument.DC_description_note,
+    format: rowDocument.DC_format,
+    formatExtent: rowDocument.DC_format_extent,
+    identifierURL: rowDocument.DC_identifier_URL,
+    identifierISBN: rowDocument.DC_identifier_ISBN,
+    source: rowDocument.DC_source,
+    language: rowDocument.DC_language,
+    coverageSpatial: rowDocument.DC_coverage_spatial,
+    coverageTemporal: rowDocument.DC_coverage_temporal,
+    coverageTemporalYear: rowDocument.DC_coverage_temporal_year,
+    rights: rowDocument.DC_rights,
+    rightsAccess: rowDocument.DC_rights_access,
+    thesisDegreeName: rowDocument.thesis_degree_name,
+    thesisDegreeLevel: rowDocument.thesis_degree_level,
+    thesisDegreeDiscipline: rowDocument.thesis_degree_discipline,
+    thesisDegreeGrantor: rowDocument.thesis_degree_grantor,
+    recCreateAt: rowDocument.reCreateAt,
+    recCreateBy: rowDocument.Cc_creBe_by,
+    recModifiedAt: rowDocument.rec_mAified_at,
+    recModifiedBy: rowDocument.recBodified_by,
+    keyword: parser.resultDcKeyword(rowsKeyword),
+    relation: parser.resultDcRelation(rowsRelation),
+    type: parser.resultDcType(rowsType),
     creator: rowCreator.creator,
-    creator_orgname: rowCreatorOrgname.creator_orgname,
+    creatorOrgName: rowCreatorOrgname.creator_orgname,
     publisher: rowPublisher.publisher,
     publisherEmail: rowPublisher.publisher_email,
     contributor: rowContributor.contributor,
     contributorEmail: rowContributor.contributor_role,
-    issued_date: rowIssuedDate.issued_date,
+    issuedDate: rowIssuedDate.issued_date,
+    status: rowDocument.status_process_document,
     tag: top10Tag,
+    image: resultImage,
   }
 
   return result
@@ -79,6 +87,12 @@ export const getDocumentsService = async () => {
     const rowContributor = await repo.selectIndexingContributorDocument(value.index_contributor)
     const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(value.index_issued_date)
     const top10Tag = await repo.selectTopNTag(pk, 10)
+    const resultImage = readFileSync(`${value.path_image}/page${value.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+      if (error) {
+        return error
+      }
+      return data
+    })
 
     return {
       id: value.document_id,
@@ -88,41 +102,43 @@ export const getDocumentsService = async () => {
       amountPage: value.amount_page,
       path: value.path,
       pathImage: value.path_image,
-      DC_title: value.DC_title,
-      DC_title_alternative: value.DC_title_alternative,
-      DC_description_table_of_contents: value.DC_description_table_of_contents,
-      DC_description_summary_or_abstract: value.DC_description_summary_or_abstract,
-      DC_description_note: value.DC_description_note,
-      DC_format: value.DC_format,
-      DC_format_extent: value.DC_format_extent,
-      DC_identifier_URL: value.DC_identifier_URL,
-      DC_identifier_ISBN: value.DC_identifier_ISBN,
-      DC_source: value.DC_source,
-      DC_language: value.DC_language,
-      DC_coverage_spatial: value.DC_coverage_spatial,
-      DC_coverage_temporal: value.DC_coverage_temporal,
-      DC_coverage_temporal_year: value.DC_coverage_temporal_year,
-      DC_rights: value.DC_rights,
-      DC_rights_access: value.DC_rights_access,
-      thesis_degree_name: value.thesis_degree_name,
-      thesis_degree_level: value.thesis_degree_level,
-      thesis_degree_discipline: value.thesis_degree_discipline,
-      thesis_degree_grantor: value.thesis_degree_grantor,
-      rec_create_at: value.rec_create_at,
-      rec_create_by: value.rec_create_by,
-      rec_modified_at: value.rec_modified_at,
-      rec_modified_by: value.rec_modified_by,
-      DC_keyword: parser.resultDcKeyword(rowsKeyword),
-      DC_relation: parser.resultDcRelation(rowsRelation),
-      DC_type: parser.resultDcType(rowsType),
+      title: value.DC_title,
+      titleAlternative: value.DC_title_alternative,
+      tableOfContents: value.DC_description_table_of_contents,
+      abstract: value.DC_description_summary_or_abstract,
+      note: value.DC_description_note,
+      format: value.DC_format,
+      formatExtent: value.DC_format_extent,
+      identifierURL: value.DC_identifier_URL,
+      identifierISBN: value.DC_identifier_ISBN,
+      source: value.DC_source,
+      language: value.DC_language,
+      coverageSpatial: value.DC_coverage_spatial,
+      coverageTemporal: value.DC_coverage_temporal,
+      coverageTemporalYear: value.DC_coverage_temporal_year,
+      rights: value.DC_rights,
+      rightsAccess: value.DC_rights_access,
+      thesisDegreeName: value.thesis_degree_name,
+      thesisDegreeLevel: value.thesis_degree_level,
+      thesisDegreeDiscipline: value.thesis_degree_discipline,
+      thesisDegreeGrantor: value.thesis_degree_grantor,
+      recCreateAt: value.rec_create_at,
+      recCreateBy: value.rec_create_by,
+      recModifiedAt: value.rec_modified_at,
+      recModifiedBy: value.rec_modified_by,
+      keyword: parser.resultDcKeyword(rowsKeyword),
+      relation: parser.resultDcRelation(rowsRelation),
+      type: parser.resultDcType(rowsType),
       creator: rowCreator.creator,
-      creator_orgname: rowCreatorOrgname.creator_orgname,
+      creatorOrgName: rowCreatorOrgname.creator_orgname,
       publisher: rowPublisher.publisher,
       publisherEmail: rowPublisher.publisher_email,
       contributor: rowContributor.contributor,
       contributorEmail: rowContributor.contributor_role,
-      issued_date: rowIssuedDate.issued_date,
+      issuedDate: rowIssuedDate.issued_date,
+      status: value.status,
       tag: top10Tag,
+      image: resultImage,
     }
   })
 
