@@ -5,7 +5,6 @@ import {
 
 export const getDocumentController = async (pk) => {
   const respones = await getDocumentService(pk)
-
   if (!respones) {
     return { statusQuery: false }
   }
@@ -15,7 +14,6 @@ export const getDocumentController = async (pk) => {
 
 export const getDocumentsController = async () => {
   const respones = await getDocumentsService()
-
   if (!respones) {
     return { statusQuery: false, documents: [] }
   }

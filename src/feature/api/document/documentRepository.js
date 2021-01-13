@@ -1,13 +1,13 @@
 import db from '../../../db/initializing'
 
 export const selectDocuments = async () => {
-  const result = await db.select().from('document').where('status_process_document', 2)
+  const result = await db.select().from('document').where('status_process_document', 6)
 
   return result
 }
 
 export const selectDocument = async (pk) => {
-  const result = await db.select().from('document').where('status_process_document', 2).andWhere('document_id', pk)
+  const result = await db.select().from('document').where('status_process_document', 6).andWhere('document_id', pk)
   return result[0]
 }
 
