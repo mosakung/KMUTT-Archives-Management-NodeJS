@@ -41,8 +41,8 @@ export const startTfDjangoController = async ({ documentId }) => startTfDjangoSe
 
 export const amountPageController = async ({ documentId }, { user }) => amountPageService(documentId, user.id)
 
-export const documentInProcessController = async (pk) => {
-  const respones = await documentInProcessService(pk)
+export const documentInProcessController = async (pk, { user }) => {
+  const respones = await documentInProcessService(pk, user)
   if (!respones) {
     return { statusQuery: false }
   }
