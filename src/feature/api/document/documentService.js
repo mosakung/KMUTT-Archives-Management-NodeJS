@@ -67,14 +67,14 @@ export const getDocumentService = async (pk) => {
     publisher: rowPublisher.publisher,
     publisherEmail: rowPublisher.publisher_email,
     contributor: rowContributor.contributor,
-    contributorEmail: rowContributor.contributor_role,
+    contributorRole: rowContributor.contributor_role,
     issuedDate: rowIssuedDate.issued_date,
     status: rowDocument.status_process_document,
     tag: top10Tag,
     image: resultImage,
   }
 
-  return result
+  return { document: result, statusQuery: true }
 }
 
 export const insertDocumentService = async (document, { user }) => {
