@@ -73,7 +73,7 @@ export const getDocumentService = async (pk) => {
     image: resultImage,
   }
 
-  return result
+  return { document: result, statusQuery: true }
 }
 
 export const getDocumentsService = async () => {
@@ -145,7 +145,7 @@ export const getDocumentsService = async () => {
     }
   })
 
-  return rowsWithDetail
+  return { document: rowsWithDetail, statusQuery: true }
 }
 
 export const insertDocumentService = async (document, { user }) => {
