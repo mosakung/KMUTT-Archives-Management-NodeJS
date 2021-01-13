@@ -51,6 +51,14 @@ type ResultDocument {
   contributor: String,
   contributorEmail: String,
   issuedDate: String,
+  tag: [Tag],
+  image: String,
+  status: Int,
+}
+
+type Tag {
+  tag: String!,
+  scoreId: Int
 }
 
 type File {
@@ -142,5 +150,4 @@ type DocumentPrevBody {
   DC_issued_date: String
   rec_create_by: String
 }
-
 

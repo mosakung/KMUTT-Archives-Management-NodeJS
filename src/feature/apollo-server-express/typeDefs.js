@@ -4,6 +4,7 @@ import { userKeywordGraphql } from '../api/user-keyword/userKeywordSchema'
 import { documentStatusGraphql } from '../api/document-status/documentStatusSchema'
 import { userGraphql } from '../api/user/userSchema'
 import { searchGraphql } from '../api/search/searchSchema'
+import { keywordGraphql } from '../api/keyword/keywordSchema'
 
 const typeDefs = []
 
@@ -26,5 +27,6 @@ typeDefs.push(userKeywordGraphql)
 typeDefs.push(documentStatusGraphql)
 typeDefs.push(userGraphql)
 typeDefs.push(searchGraphql)
+typeDefs.push(keywordGraphql)
 
 export default typeDefs

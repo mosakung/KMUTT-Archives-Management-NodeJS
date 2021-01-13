@@ -3,7 +3,7 @@ import db from '../../../db/initializing'
 const documentStatusRepository = {
   selectDocumentNotDone: async (userId) => {
     const result = await db
-      .select('document_id', 'rec_create_at', 'name', 'version', 'status_process_document', 'DC_title')
+      .select('document_id', 'rec_create_at', 'name', 'version', 'status_process_document', 'DC_title', 'path_image', 'page_start')
       .from('document')
       .where('rec_create_by', userId)
       .having('status_process_document', '<', '6')
@@ -12,7 +12,7 @@ const documentStatusRepository = {
   },
   selectDocumentById: async (documentId, userId) => {
     const result = await db
-      .select('document_id', 'name', 'version', 'status_process_document', 'path_image', 'rec_create_at', 'DC_title')
+      .select('document_id', 'name', 'version', 'status_process_document', 'path_image', 'rec_create_at', 'DC_title', 'page_start')
       .from('document')
       .where('document_id', documentId)
       .andWhere('rec_create_by', userId)
@@ -87,6 +87,12 @@ const documentStatusRepository = {
       .andWhere('document_id', documentId)
     if (result.length === 0) return false
     return true
+  },
+  selectPageAmount: async (documentId, userId) => {
+    const result = await db.select('page_start', 'amount_page', 'status_process_document').from('document')
+      .where('document_id', documentId)
+      .andWhere('rec_create_by', userId)
+    return result
   },
 }
 

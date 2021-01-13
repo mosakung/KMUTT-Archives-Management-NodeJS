@@ -1,0 +1,8 @@
+extend type Mutation {
+  setStatusKeyword(scoreId: [Int]!, status: String!): ResultSetStatus
+}
+
+type ResultSetStatus{
+  status: Boolean,
+  message: String
+}

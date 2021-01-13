@@ -1,35 +1,27 @@
-import { createWriteStream, unlinkSync, rename } from 'fs'
+import { createWriteStream, unlinkSync, readFileSync } from 'fs'
 
 import djangoRequest from '../../django-request/djangoRequest'
-import {
-  parserResultDcKeyword,
-  parserResultDcRelation,
-  parserResultDcType,
-} from './parserDocument'
+import parser from './parserDocument'
 
-import {
-  selectDocument,
-  selectDocuments,
-  selectDcKeyword,
-  selectDcRelation,
-  selectDcType,
-  selectIndexingContributorDocument,
-  selectIndexingCreatorDocument,
-  selectIndexingCreatorOrgnameDocument,
-  selectIndexingIssuedDateDocument,
-  selectIndexingPublisherDocument,
-} from './documentRepository'
+import repo from './documentRepository'
 
 export const getDocumentService = async (pk) => {
-  const rowDocument = await selectDocument(pk)
-  const rowsKeyword = await selectDcKeyword(pk)
-  const rowsRelation = await selectDcRelation(pk)
-  const rowsType = await selectDcType(pk)
-  const rowCreator = await selectIndexingCreatorDocument(rowDocument.index_creator)
-  const rowCreatorOrgname = await selectIndexingCreatorOrgnameDocument(rowDocument.index_creator_orgname)
-  const rowPublisher = await selectIndexingPublisherDocument(rowDocument.index_publisher)
-  const rowContributor = await selectIndexingContributorDocument(rowDocument.index_contributor)
-  const rowIssuedDate = await selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
+  const rowDocument = await repo.selectDocument(pk)
+  const rowsKeyword = await repo.selectDcKeyword(pk)
+  const rowsRelation = await repo.selectDcRelation(pk)
+  const rowsType = await repo.selectDcType(pk)
+  const rowCreator = await repo.selectIndexingCreatorDocument(rowDocument.index_creator)
+  const rowCreatorOrgname = await repo.selectIndexingCreatorOrgnameDocument(rowDocument.index_creator_orgname)
+  const rowPublisher = await repo.selectIndexingPublisherDocument(rowDocument.index_publisher)
+  const rowContributor = await repo.selectIndexingContributorDocument(rowDocument.index_contributor)
+  const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
+  const top10Tag = await repo.selectTopNTag(pk, 10)
+  const resultImage = readFileSync(`${rowDocument.path_image}/page${rowDocument.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+    if (error) {
+      return error
+    }
+    return data
+  })
 
   const result = {
     id: rowDocument.document_id,
@@ -63,9 +55,9 @@ export const getDocumentService = async (pk) => {
     recCreateBy: rowDocument.Cc_creBe_by,
     recModifiedAt: rowDocument.rec_mAified_at,
     recModifiedBy: rowDocument.recBodified_by,
-    keyword: parserResultDcKeyword(rowsKeyword),
-    relation: parserResultDcRelation(rowsRelation),
-    type: parserResultDcType(rowsType),
+    keyword: parser.resultDcKeyword(rowsKeyword),
+    relation: parser.resultDcRelation(rowsRelation),
+    type: parser.resultDcType(rowsType),
     creator: rowCreator.creator,
     creatorOrgName: rowCreatorOrgname.creator_orgname,
     publisher: rowPublisher.publisher,
@@ -73,24 +65,34 @@ export const getDocumentService = async (pk) => {
     contributor: rowContributor.contributor,
     contributorEmail: rowContributor.contributor_role,
     issuedDate: rowIssuedDate.issued_date,
+    status: rowDocument.status_process_document,
+    tag: top10Tag,
+    image: resultImage,
   }
 
   return result
 }
 
 export const getDocumentsService = async () => {
-  const rows = await selectDocuments()
+  const rows = await repo.selectDocuments()
 
   const rowsWithDetail = rows.map(async (value) => {
     const pk = value.document_id
-    const rowsKeyword = await selectDcKeyword(pk)
-    const rowsRelation = await selectDcRelation(pk)
-    const rowsType = await selectDcType(pk)
-    const rowCreator = await selectIndexingCreatorDocument(value.index_creator)
-    const rowCreatorOrgname = await selectIndexingCreatorOrgnameDocument(value.index_creator_orgname)
-    const rowPublisher = await selectIndexingPublisherDocument(value.index_publisher)
-    const rowContributor = await selectIndexingContributorDocument(value.index_contributor)
-    const rowIssuedDate = await selectIndexingIssuedDateDocument(value.index_issued_date)
+    const rowsKeyword = await repo.selectDcKeyword(pk)
+    const rowsRelation = await repo.selectDcRelation(pk)
+    const rowsType = await repo.selectDcType(pk)
+    const rowCreator = await repo.selectIndexingCreatorDocument(value.index_creator)
+    const rowCreatorOrgname = await repo.selectIndexingCreatorOrgnameDocument(value.index_creator_orgname)
+    const rowPublisher = await repo.selectIndexingPublisherDocument(value.index_publisher)
+    const rowContributor = await repo.selectIndexingContributorDocument(value.index_contributor)
+    const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(value.index_issued_date)
+    const top10Tag = await repo.selectTopNTag(pk, 10)
+    const resultImage = readFileSync(`${value.path_image}/page${value.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+      if (error) {
+        return error
+      }
+      return data
+    })
 
     return {
       id: value.document_id,
@@ -124,9 +126,9 @@ export const getDocumentsService = async () => {
       recCreateBy: value.rec_create_by,
       recModifiedAt: value.rec_modified_at,
       recModifiedBy: value.rec_modified_by,
-      keyword: parserResultDcKeyword(rowsKeyword),
-      relation: parserResultDcRelation(rowsRelation),
-      type: parserResultDcType(rowsType),
+      keyword: parser.resultDcKeyword(rowsKeyword),
+      relation: parser.resultDcRelation(rowsRelation),
+      type: parser.resultDcType(rowsType),
       creator: rowCreator.creator,
       creatorOrgName: rowCreatorOrgname.creator_orgname,
       publisher: rowPublisher.publisher,
@@ -134,6 +136,9 @@ export const getDocumentsService = async () => {
       contributor: rowContributor.contributor,
       contributorEmail: rowContributor.contributor_role,
       issuedDate: rowIssuedDate.issued_date,
+      status: value.status,
+      tag: top10Tag,
+      image: resultImage,
     }
   })
 
