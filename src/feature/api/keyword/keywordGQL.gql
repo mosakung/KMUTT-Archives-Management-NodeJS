@@ -1,8 +1,8 @@
-extend type Mutation {
-  setStatusKeyword(scoreId: [Int]!, status: String!): ResultSetStatus
+extend type Query {
+  tagInDocument(documentId: Int!): [String]
+  generateTagForShow(documentId: Int!): [String]
 }
 
-type ResultSetStatus{
-  status: Boolean,
-  message: String
+extend type Mutation {
+  insertTagForShow(documentId: Int!, newTag: [String]): Boolean
 }

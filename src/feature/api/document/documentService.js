@@ -39,7 +39,8 @@ export const getDocumentService = async (pk) => {
     title: rowDocument.DC_title,
     titleAlternative: rowDocument.DC_title_alternative,
     tableOfContents: rowDocument.DC_description_table_of_contents,
-    abstract: rowDocument.DC_description_summary_or_abstract,
+    summary: rowDocument.DC_description_summary,
+    abstract: rowDocument.DC_description_abstract,
     note: rowDocument.DC_description_note,
     format: rowDocument.DC_format,
     formatExtent: rowDocument.DC_format_extent,
@@ -76,78 +77,6 @@ export const getDocumentService = async (pk) => {
   }
 
   return { document: result, statusQuery: true }
-}
-
-export const getDocumentsService = async () => {
-  const rows = await repo.selectDocuments()
-
-  const rowsWithDetail = rows.map(async (value) => {
-    const pk = value.document_id
-    const rowsKeyword = await repo.selectDcKeyword(pk)
-    const rowsRelation = await repo.selectDcRelation(pk)
-    const rowsType = await repo.selectDcType(pk)
-    const rowCreator = await repo.selectIndexingCreatorDocument(value.index_creator)
-    const rowCreatorOrgname = await repo.selectIndexingCreatorOrgnameDocument(value.index_creator_orgname)
-    const rowPublisher = await repo.selectIndexingPublisherDocument(value.index_publisher)
-    const rowContributor = await repo.selectIndexingContributorDocument(value.index_contributor)
-    const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(value.index_issued_date)
-    const top10Tag = await repo.selectTopNTag(pk, 10)
-    const resultImage = readFileSync(`${value.path_image}/page${value.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
-      if (error) {
-        return error
-      }
-      return data
-    })
-
-    return {
-      id: value.document_id,
-      name: value.name,
-      version: value.version,
-      pageStart: value.page_start,
-      amountPage: value.amount_page,
-      path: value.path,
-      pathImage: value.path_image,
-      title: value.DC_title,
-      titleAlternative: value.DC_title_alternative,
-      tableOfContents: value.DC_description_table_of_contents,
-      abstract: value.DC_description_summary_or_abstract,
-      note: value.DC_description_note,
-      format: value.DC_format,
-      formatExtent: value.DC_format_extent,
-      identifierURL: value.DC_identifier_URL,
-      identifierISBN: value.DC_identifier_ISBN,
-      source: value.DC_source,
-      language: value.DC_language,
-      coverageSpatial: value.DC_coverage_spatial,
-      coverageTemporal: value.DC_coverage_temporal,
-      coverageTemporalYear: value.DC_coverage_temporal_year,
-      rights: value.DC_rights,
-      rightsAccess: value.DC_rights_access,
-      thesisDegreeName: value.thesis_degree_name,
-      thesisDegreeLevel: value.thesis_degree_level,
-      thesisDegreeDiscipline: value.thesis_degree_discipline,
-      thesisDegreeGrantor: value.thesis_degree_grantor,
-      recCreateAt: value.rec_create_at,
-      recCreateBy: value.rec_create_by,
-      recModifiedAt: value.rec_modified_at,
-      recModifiedBy: value.rec_modified_by,
-      keyword: parser.resultDcKeyword(rowsKeyword),
-      relation: parser.resultDcRelation(rowsRelation),
-      type: parser.resultDcType(rowsType),
-      creator: rowCreator.creator,
-      creatorOrgName: rowCreatorOrgname.creator_orgname,
-      publisher: rowPublisher.publisher,
-      publisherEmail: rowPublisher.publisher_email,
-      contributor: rowContributor.contributor,
-      contributorEmail: rowContributor.contributor_role,
-      issuedDate: rowIssuedDate.issued_date,
-      status: value.status,
-      tag: top10Tag,
-      image: resultImage,
-    }
-  })
-
-  return { document: rowsWithDetail, statusQuery: true }
 }
 
 export const insertDocumentService = async (document, { user }) => {
@@ -203,5 +132,7 @@ export const uploadDocumentService = async (fileUpload) => {
 
   return result
 }
+
+export const softDeleteDocumentService = async (documentId) => repo.deleteDocumentSoft(documentId)
 
 export default {}

@@ -1,6 +1,6 @@
 import parser from './parserDocument'
 import {
-  getDocumentService, getDocumentsService, insertDocumentService, uploadDocumentService,
+  getDocumentService, insertDocumentService, uploadDocumentService, softDeleteDocumentService,
 } from './documentService'
 
 export const getDocumentController = async (pk) => {
@@ -10,15 +10,6 @@ export const getDocumentController = async (pk) => {
   }
 
   return { statusQuery: true, ...respones }
-}
-
-export const getDocumentsController = async () => {
-  const respones = await getDocumentsService()
-  if (!respones) {
-    return { statusQuery: false, documents: [] }
-  }
-
-  return { statusQuery: true, documents: respones }
 }
 
 export const insertDocumentController = async (req, context) => {
@@ -39,5 +30,7 @@ export const insertDocumentController = async (req, context) => {
 }
 
 export const uploadDocumentController = async (parent, args) => uploadDocumentService(args.file)
+
+export const softDeleteDocumentController = async (documentId) => softDeleteDocumentService(documentId)
 
 export default {}

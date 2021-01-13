@@ -2,13 +2,12 @@ import db from '../../../db/initializing'
 
 const documentRepository = {
   selectDocuments: async () => {
-    const result = await db.select().from('document').where('status_process_document', 6)
-
+    const result = await db
+      .select()
+      .from('document')
+      .where('status_process_document', 6)
+      .andWhere('rec_status', 1)
     return result
-  },
-  selectDocument: async (pk) => {
-    const result = await db.select().from('document').where('status_process_document', 6).andWhere('document_id', pk)
-    return result[0]
   },
   selectDcKeyword: async (pkDocument) => {
     const result = await db.select().from('dc_keyword').where('index_document_id', pkDocument)
@@ -61,6 +60,7 @@ const documentRepository = {
     }))
     return result
   },
+  deleteDocumentSoft: async (pk) => db('document').where('document_id', pk).update('rec_status', -1),
 }
 
 export default documentRepository

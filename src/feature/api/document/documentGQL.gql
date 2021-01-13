@@ -1,11 +1,5 @@
 extend type Query {
   document(pk: Int!): TupleResultDocument
-  documents: TupleResultDocuments
-}
-
-type TupleResultDocuments {
-  statusQuery: Boolean
-  documents: [ResultDocument]
 }
 
 type TupleResultDocument{
@@ -25,6 +19,7 @@ type ResultDocument {
   title: String,
   titleAlternative: String,
   tableOfContents: String,
+  summary: String,
   abstract: String,
   note: String,
   format: String,
@@ -76,6 +71,7 @@ type File {
 extend type Mutation {
   addDocument(body: AddDocumentInput!): ResultAddDocument
   uploadDocument(file: Upload!): File!
+  softDeleteDocument(documentId: Int!): Boolean
 }
 
 input AddDocumentInput {
@@ -88,7 +84,8 @@ input AddDocumentInput {
   DC_title: String!
   DC_title_alternative: String
   DC_description_table_of_contents: String
-  DC_description_summary_or_abstract: String
+  DC_description_summary: String
+  DC_description_abstract: String
   DC_description_note: String
   DC_format: String
   DC_format_extent: String
@@ -130,7 +127,8 @@ type DocumentPrevBody {
   DC_title: String
   DC_title_alternative: String
   DC_description_table_of_contents: String
-  DC_description_summary_or_abstract: String
+  DC_description_summary: String
+  DC_description_abstract: String
   DC_description_note: String
   DC_format: String
   DC_format_extent: String
