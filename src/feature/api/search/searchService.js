@@ -21,14 +21,17 @@ export const searchService = async (fulltext) => {
 
   const retrievalSet = parser.restructRetrievalScore(retrievalScore)
   const uniqueDocument = parser.crateUnique(retrievalSet)
-  const filterDocument = await Promise.all(uniqueDocument.filter(async (docId) => {
+  const promiseFilterDocument = await Promise.all(uniqueDocument.map(async (docId) => {
     const result = await repo.selectFinishDocument(docId)
-    return result.length > 0
+    if (result.length === 0) {
+      return -1
+    }
+    return docId
   }))
-  console.log('111', filterDocument)
+
+  const filterDocument = promiseFilterDocument.filter((docId) => (docId !== -1))
   const relevanceScoreSet = parser.crateDicRelevance(filterDocument, retrievalSet)
 
-  console.log('check', relevanceScoreSet)
   const calculateRelevanceScore = (scores, lenTokens) => {
     let sigmaScore = 0
     for (let i = 0; i < scores.length; i += 1) {
