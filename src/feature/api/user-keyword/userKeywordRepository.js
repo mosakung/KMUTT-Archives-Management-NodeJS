@@ -54,7 +54,7 @@ export const scoreMarkTagSystem = async (id) => db('score').update('generate_by'
 
 export const updateIdfTerm = async (termId) => {
   const timestamp = db.fn.now()
-  const row = await db('document').count('document_id as value')
+  const row = await db('document').count('document_id as value').where('rec_status', 1)
   const N = row[0].value
   return db('term_word').update({ score_idf: db.raw(`?? / ${N}`, ['frequency']), rec_modified_at: timestamp }).where('term_word_id', termId)
 }
