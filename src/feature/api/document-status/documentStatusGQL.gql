@@ -61,6 +61,7 @@ type DocumentStatus {
   pages: [Page],
   title: String,
   publish:String,
+  image: String,
 }
 
 type Page {

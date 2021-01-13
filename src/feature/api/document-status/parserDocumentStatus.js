@@ -10,6 +10,8 @@ const parserDocumentStatus = {
         version: row.version,
         status: row.status_process_document,
         publish: publishs,
+        pathImage: row.path_image,
+        pageStart: row.page_start,
       })
     })
     return defineParser

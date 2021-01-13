@@ -17,7 +17,7 @@ type ResultDocument {
   amountPage: Int,
   path: String,
   pathImage: String,
-  DC_title: String,
+  title: String,
   DC_title_alternative: String,
   DC_description_table_of_contents: String,
   DC_description_summary_or_abstract: String,
@@ -51,7 +51,14 @@ type ResultDocument {
   contributor: String,
   contributorEmail: String,
   issued_date: String,
-  tag: [String],
+  tag: [Tag],
+  image: String,
+  status: Int,
+}
+
+type Tag {
+  tag: String!,
+  scoreId: Int
 }
 
 type File {
@@ -143,5 +150,4 @@ type DocumentPrevBody {
   DC_issued_date: String
   rec_create_by: String
 }
-
 

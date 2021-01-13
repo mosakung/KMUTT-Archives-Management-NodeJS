@@ -1,4 +1,4 @@
-import { createWriteStream, unlinkSync } from 'fs'
+import { createWriteStream, unlinkSync, readFileSync } from 'fs'
 
 import djangoRequest from '../../django-request/djangoRequest'
 import parser from './parserDocument'
@@ -16,6 +16,12 @@ export const getDocumentService = async (pk) => {
   const rowContributor = await repo.selectIndexingContributorDocument(rowDocument.index_contributor)
   const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
   const top10Tag = await repo.selectTopNTag(pk, 10)
+  const resultImage = readFileSync(`${rowDocument.path_image}/page${rowDocument.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+    if (error) {
+      return error
+    }
+    return data
+  })
 
   const result = {
     id: rowDocument.document_id,
@@ -25,7 +31,7 @@ export const getDocumentService = async (pk) => {
     amountPage: rowDocument.amount_page,
     path: rowDocument.path,
     pathImage: rowDocument.path_image,
-    DC_title: rowDocument.DC_title,
+    title: rowDocument.DC_title,
     DC_title_alternative: rowDocument.DC_title_alternative,
     DC_description_table_of_contents: rowDocument.DC_description_table_of_contents,
     DC_description_summary_or_abstract: rowDocument.DC_description_summary_or_abstract,
@@ -59,7 +65,9 @@ export const getDocumentService = async (pk) => {
     contributor: rowContributor.contributor,
     contributorEmail: rowContributor.contributor_role,
     issued_date: rowIssuedDate.issued_date,
+    status: rowDocument.status_process_document,
     tag: top10Tag,
+    image: resultImage,
   }
 
   return result
@@ -122,6 +130,7 @@ export const getDocumentsService = async () => {
       contributor: rowContributor.contributor,
       contributorEmail: rowContributor.contributor_role,
       issued_date: rowIssuedDate.issued_date,
+      status: value.status,
       tag: top10Tag,
     }
   })
