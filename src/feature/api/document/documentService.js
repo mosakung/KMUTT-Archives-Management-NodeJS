@@ -7,6 +7,9 @@ import repo from './documentRepository'
 
 export const getDocumentService = async (pk) => {
   const rowDocument = await repo.selectDocument(pk)
+  if (typeof (rowDocument) === 'undefined') {
+    return { statusQuery: false }
+  }
   const rowsKeyword = await repo.selectDcKeyword(pk)
   const rowsRelation = await repo.selectDcRelation(pk)
   const rowsType = await repo.selectDcType(pk)
@@ -51,10 +54,10 @@ export const getDocumentService = async (pk) => {
     thesisDegreeLevel: rowDocument.thesis_degree_level,
     thesisDegreeDiscipline: rowDocument.thesis_degree_discipline,
     thesisDegreeGrantor: rowDocument.thesis_degree_grantor,
-    recCreateAt: rowDocument.reCreateAt,
-    recCreateBy: rowDocument.Cc_creBe_by,
-    recModifiedAt: rowDocument.rec_mAified_at,
-    recModifiedBy: rowDocument.recBodified_by,
+    recCreateAt: rowDocument.rec_create_at,
+    recCreateBy: rowDocument.rec_create_by,
+    recModifiedAt: rowDocument.rec_modified_at,
+    recModifiedBy: rowDocument.rec_modified_by,
     keyword: parser.resultDcKeyword(rowsKeyword),
     relation: parser.resultDcRelation(rowsRelation),
     type: parser.resultDcType(rowsType),

@@ -1,11 +1,16 @@
 extend type Query {
-  document(pk: Int!): ResultDocument
+  document(pk: Int!): TupleResultDocument
   documents: TupleResultDocuments
 }
 
 type TupleResultDocuments {
   statusQuery: Boolean
   documents: [ResultDocument]
+}
+
+type TupleResultDocument{
+  statusQuery: Boolean
+  document: ResultDocument
 }
 
 type ResultDocument {

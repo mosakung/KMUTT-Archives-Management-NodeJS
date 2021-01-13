@@ -12,6 +12,7 @@ import {
   startTfDjangoController,
   overridePertermController,
   amountPageController,
+  documentInProcessController,
 } from './documentStatusController'
 
 const fileGraphqlType = readFileSync(`${__dirname}/documentStatusGQL.gql`, 'utf8')
@@ -25,6 +26,7 @@ export const documentStatusResolver = {
     pageInDocument: (_, param) => pageInDocumentController(param),
     keywordInPage: (_, param, context) => keywordInPageController(param, context),
     amountPage: (_, param, context) => amountPageController(param, context),
+    documentInProcess: (_, { pk }) => documentInProcessController(pk),
   },
   Mutation: {
     insertPreterm: (_, param, context) => insertPretermController(param, context),

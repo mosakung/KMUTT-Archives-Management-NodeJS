@@ -12,6 +12,10 @@ const searchRepository = {
     const rows = await db.select().from('score').where('index_term_word_id', termId)
     return rows
   },
+  selectFinishDocument: async (docId) => {
+    const row = await db.select('document_id').from('document').where('document_id', docId).andWhere('status_process_document', 6)
+    return row
+  },
 }
 
 export default searchRepository

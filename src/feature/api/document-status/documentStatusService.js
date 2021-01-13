@@ -144,4 +144,18 @@ export const amountPageService = async (documentId, userId) => {
   return { firstPage: result[0].page_start, lastPage: result[0].amount_page + result[0].page_start - 1, status: result[0].status_process_document }
 }
 
+export const documentInProcessService = async (pk) => {
+  const rowDocument = await repo.selectDocument(pk)
+  const top10Tag = await repo.selectTopNTag(pk, 10)
+  const resultImage = readFileSync(`${rowDocument[0].path_image}/page${rowDocument[0].page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+    if (error) {
+      return error
+    }
+    return data
+  })
+  return {
+    title: rowDocument[0].DC_title, image: resultImage, status: rowDocument[0].status_process_document, tag: top10Tag,
+  }
+}
+
 export default {}

@@ -94,6 +94,24 @@ const documentStatusRepository = {
       .andWhere('rec_create_by', userId)
     return result
   },
+  selectTopNTag: async (pk, limit) => {
+    const rowScores = await db
+      .select('index_term_word_id', 'score_tf_idf', 'score_id')
+      .from('score')
+      .where('index_document_id', pk)
+      .andWhere('rec_status', 1)
+      .orderBy('score_tf_idf', 'desc')
+      .limit(limit)
+    const result = await Promise.all(rowScores.map(async (element) => {
+      const rowTerm = await db.select('term').from('term_word').where('term_word_id', element.index_term_word_id)
+      return { tag: rowTerm[0].term, scoreId: element.score_id }
+    }))
+    return result
+  },
+  selectDocument: async (pk) => {
+    const result = await db.select().from('document').where('document_id', pk)
+    return result
+  },
 }
 
 export default documentStatusRepository

@@ -4,6 +4,7 @@ extend type Query {
   pageInDocument(documentId: Int!): [Page]
   keywordInPage(pageId: Int!, documentId: Int!): PageDetail
   amountPage(documentId: Int!): ResultAmountPage
+  documentInProcess(pk: Int!): ResultDocumentInProcess
 }
 
 extend type Mutation {
@@ -86,3 +87,12 @@ type PreTerm {
 type Image {
   image: String
 }
+
+type ResultDocumentInProcess {
+  statusQuery: Boolean,
+  title: String,
+  tag: [Tag],
+  image: String,
+  status: Int,
+}
+
