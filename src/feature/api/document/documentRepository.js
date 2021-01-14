@@ -1,13 +1,13 @@
 import db from '../../../db/initializing'
 
 const documentRepository = {
-  selectDocuments: async () => {
+  selectDocument: async (pk) => {
     const result = await db
       .select()
       .from('document')
-      .where('status_process_document', 6)
       .andWhere('rec_status', 1)
-    return result
+      .andWhere('document_id', pk)
+    return result[0]
   },
   selectDcKeyword: async (pkDocument) => {
     const result = await db.select().from('dc_keyword').where('index_document_id', pkDocument)

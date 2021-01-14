@@ -29,12 +29,20 @@ export const documentStatusService = async (documentId, userId) => {
   const rowsPageRaw = await repo.selectPageInDocument(documentId)
   const rowsPage = parser.page(rowsPageRaw)
   const path = rowDocumentRaw[0].path_image
-  const resultImage = readFileSync(`${path}/page${rowDocumentRaw[0].page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
-    if (error) {
-      return error
+  let resultImage = null
+  try {
+    resultImage = readFileSync(`${path}/page${rowDocumentRaw[0].page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+      if (error) {
+        return error
+      }
+      return data
+    })
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      console.log(err)
     }
-    return data
-  })
+  }
+
   return { ...rowDocument[0], pages: rowsPage, image: resultImage }
 }
 

@@ -18,8 +18,6 @@ export const getDocumentService = async (pk) => {
   const rowPublisher = await repo.selectIndexingPublisherDocument(rowDocument.index_publisher)
   const rowContributor = await repo.selectIndexingContributorDocument(rowDocument.index_contributor)
   const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
-  const date = rowIssuedDate.issued_date
-  const publishs = `${date.getFullYear()}-${(`0${date.getMonth() + 1}`).slice(-2)}-${date.getDate()}`
   const top10Tag = await repo.selectTopNTag(pk, 10)
   const resultImage = readFileSync(`${rowDocument.path_image}/page${rowDocument.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
     if (error) {
@@ -70,7 +68,7 @@ export const getDocumentService = async (pk) => {
     publisherEmail: rowPublisher.publisher_email,
     contributor: rowContributor.contributor,
     contributorRole: rowContributor.contributor_role,
-    issuedDate: publishs,
+    issuedDate: rowIssuedDate.issued_date,
     status: rowDocument.status_process_document,
     tag: top10Tag,
     image: resultImage,
