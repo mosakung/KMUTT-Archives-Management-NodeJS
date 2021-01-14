@@ -1,17 +1,17 @@
-export const parserDebViewUserKeyword = (param) => {
-  const defineParser = param.map((row) => ({
-    id: row.DC_keyword_id,
-    keyword: row.DC_keyword,
-  }))
-  return defineParser
+const parserUserKeyword = {
+  debViewUserKeyword: (param) => param.map((element) => element.DC_keyword),
+  bodyInsertUserKeyword: (keywords, documentId) => {
+    const defineParser = keywords.map((row) => ({
+      DC_keyword: row,
+      index_document_id: documentId,
+    }))
+    return defineParser
+  },
+  mergeLog: (norTag, logAddTag, logDelTag) => {
+    const logNor = norTag.map((el) => ({ keyword: el, status: true, message: 'normal tag not change' }))
+    const mergeLog = [...logNor, ...logAddTag, ...logDelTag]
+    return mergeLog
+  },
 }
 
-export const parserBodyInsertUserKeyword = (param) => {
-  const { keywords, idDocument } = param
-  const defineParser = keywords.map((row) => ({
-    DC_keyword: row,
-    index_document_id: idDocument,
-  }))
-  return defineParser
-}
-export default {}
+export default parserUserKeyword

@@ -1,8 +1,0 @@
-extend type Query {
-  tagInDocument(documentId: Int!): [String]
-  generateTagForShow(documentId: Int!): [String]
-}
-
-extend type Mutation {
-  insertTagForShow(documentId: Int!, newTag: [String]): Boolean
-}

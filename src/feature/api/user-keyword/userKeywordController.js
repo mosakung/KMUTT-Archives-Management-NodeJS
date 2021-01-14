@@ -1,19 +1,10 @@
-import { viewUserKeywordService, insertUserKeywordService, DeleteUserKeywordService } from './userKeywordService'
+import {
+  tagInDocumentService, generateTagForAddService, putDocumentDoneService, overrideUserKeywordService,
+} from './userKeywordService'
 
-// export const viewUserKeywordController = ({ idDocument }) => viewUserKeywordService(idDocument)
-export const viewUserKeywordController = ({ idDocument }, context) => {
-  console.log(context)
-  return viewUserKeywordService(idDocument)
-}
-
-export const insertUserKeywordController = async (req) => {
-  const body = { ...req }
-  return insertUserKeywordService(body)
-}
-
-export const DeleteUserKeywordController = (req) => {
-  const body = { ...req }
-  return DeleteUserKeywordService(body)
-}
+export const tagInDocumentController = async (documentId) => tagInDocumentService(documentId)
+export const generateTagForAddController = async (documentId) => generateTagForAddService(documentId)
+export const putDocumentDoneController = async (documentId) => putDocumentDoneService(documentId)
+export const overrideUserKeywordController = async (keywords, documentId) => overrideUserKeywordService(keywords, documentId)
 
 export default {}
