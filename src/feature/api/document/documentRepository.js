@@ -46,20 +46,6 @@ const documentRepository = {
     const result = await db.select().from('indexing_publisher_document').where('indexing_publisher_id', pk)
     return result[0]
   },
-  selectTopNTag: async (pk, limit) => {
-    const rowScores = await db
-      .select('index_term_word_id', 'score_tf_idf', 'score_id')
-      .from('score')
-      .where('index_document_id', pk)
-      .andWhere('rec_status', 1)
-      .orderBy('score_tf_idf', 'desc')
-      .limit(limit)
-    const result = await Promise.all(rowScores.map(async (element) => {
-      const rowTerm = await db.select('term').from('term_word').where('term_word_id', element.index_term_word_id)
-      return { tag: rowTerm[0].term, scoreId: element.score_id }
-    }))
-    return result
-  },
   deleteDocumentSoft: async (pk) => db('document').where('document_id', pk).update('rec_status', -1),
 }
 

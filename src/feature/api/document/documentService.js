@@ -5,6 +5,9 @@ import parser from './parserDocument'
 
 import repo from './documentRepository'
 
+/* IMPORT SERVICE KEYWORD */
+import { tagInDocumentService } from '../keyword/keywordService'
+
 export const getDocumentService = async (pk) => {
   const rowDocument = await repo.selectDocument(pk)
   if (typeof (rowDocument) === 'undefined') {
@@ -18,7 +21,7 @@ export const getDocumentService = async (pk) => {
   const rowPublisher = await repo.selectIndexingPublisherDocument(rowDocument.index_publisher)
   const rowContributor = await repo.selectIndexingContributorDocument(rowDocument.index_contributor)
   const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
-  const top10Tag = await repo.selectTopNTag(pk, 10)
+  const tag = await tagInDocumentService(pk)
   const resultImage = readFileSync(`${rowDocument.path_image}/page${rowDocument.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
     if (error) {
       return error
@@ -70,7 +73,7 @@ export const getDocumentService = async (pk) => {
     contributorRole: rowContributor.contributor_role,
     issuedDate: rowIssuedDate.issued_date,
     status: rowDocument.status_process_document,
-    tag: top10Tag,
+    tag,
     image: resultImage,
   }
 

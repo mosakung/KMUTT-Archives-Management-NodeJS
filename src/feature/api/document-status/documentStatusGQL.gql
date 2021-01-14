@@ -86,11 +86,4 @@ type Image {
   image: String
 }
 
-type ResultDocumentInProcess {
-  statusQuery: Boolean,
-  title: String,
-  tag: [Tag],
-  image: String,
-  status: Int,
-}
 

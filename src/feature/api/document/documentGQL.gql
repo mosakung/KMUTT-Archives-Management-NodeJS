@@ -51,14 +51,9 @@ type ResultDocument {
   contributor: String,
   contributorRole: String,
   issuedDate: String,
-  tag: [Tag],
+  tag: [String],
   image: String,
   status: Int,
-}
-
-type Tag {
-  tag: String!,
-  scoreId: Int
 }
 
 type File {
