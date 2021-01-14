@@ -17,7 +17,7 @@ export const documentStatusMultipleService = async (userId) => {
       }
       return data
     })
-    return { ...row, pages: rowsPage, image: resultImage }
+    return { ...row, pages: rowsPage, image: row.status > 2 ? resultImage : null }
   }))
 
   return documentSet

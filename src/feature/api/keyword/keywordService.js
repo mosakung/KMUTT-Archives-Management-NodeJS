@@ -24,7 +24,6 @@ export const generateTagForShowService = async (documentId) => {
 export const insertTagForShowService = async (documentId, newTag) => {
   const check = await repo.checkStatus5Document(documentId)
   if (!check) return false
-  console.log(newTag)
   const perInsert = parser.insertShowKeyword(newTag, documentId)
   const result = await repo.insertShowTag(perInsert)
   if (!result) return false
