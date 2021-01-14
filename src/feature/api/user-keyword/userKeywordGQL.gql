@@ -1,33 +1,15 @@
 extend type Query {
-  userKeyword(idDocument: Int!): [UserKeyword]
+  tagInDocument(documentId: Int!): [String],
+  generateTagForAdd(documentId: Int!, limit: Int): [String]
 }
 
 extend type Mutation {
-  insertUserKeyword(body: InsertUserKeywordInput!): [ResultInsertUserKeyword],
-  deleteUserKeyword(body: DeleteUserKeywordInput!): ResultDeleteUserKeyword
+  putDocumentDone(documentID: Int!): Boolean,
+  overrideUserKeyword(keywords: [String]!, documentId: Int!): [ResultOverrideUserKeyword]
 }
 
-input InsertUserKeywordInput {
-  keywords: [String]!,
-  idDocument: Int!
-}
-
-input DeleteUserKeywordInput {
-  keywordsId: Int!,
-  idDocument: Int!
-}
-
-type UserKeyword {
-  id: Int,
+type ResultOverrideUserKeyword {
   keyword: String
-}
-
-type ResultInsertUserKeyword {
   status: Boolean,
-  message: String
-}
-
-type ResultDeleteUserKeyword {
-  status: Int,
   message: String
 }

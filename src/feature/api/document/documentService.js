@@ -6,7 +6,7 @@ import parser from './parserDocument'
 import repo from './documentRepository'
 
 /* IMPORT SERVICE KEYWORD */
-import { tagInDocumentService } from '../keyword/keywordService'
+import { tagInDocumentService } from '../user-keyword/userKeywordService'
 
 export const getDocumentService = async (pk) => {
   const rowDocument = await repo.selectDocument(pk)
