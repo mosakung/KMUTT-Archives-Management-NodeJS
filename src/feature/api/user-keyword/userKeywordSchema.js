@@ -14,7 +14,7 @@ export const userKeywordResolver = {
     generateTagForAdd: (_, { documentId, limit }) => generateTagForAddController(documentId, limit),
   },
   Mutation: {
-    putDocumentDone: (_, { documentId }) => putDocumentDoneController(documentId),
+    putDocumentDone: (_, { documentID }) => putDocumentDoneController(documentID),
     overrideUserKeyword: (_, { keywords, documentId }) => overrideUserKeywordController(keywords, documentId),
   },
 }

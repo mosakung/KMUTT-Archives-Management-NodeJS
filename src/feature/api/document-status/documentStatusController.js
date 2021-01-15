@@ -9,8 +9,6 @@ import {
   changeStatusPageService,
   startTfDjangoService,
   overridePertermService,
-  amountPageService,
-  documentInProcessService,
 } from './documentStatusService'
 
 export const documentStatusMultipleController = async ({ user }) => {

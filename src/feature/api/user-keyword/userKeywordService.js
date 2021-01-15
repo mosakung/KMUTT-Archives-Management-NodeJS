@@ -2,7 +2,7 @@ import repo from './userKeywordRepository'
 import parser from './parserUserKeyword'
 import intersectArray from '../../../utils/array/intersectArray'
 import subtractArrays from '../../../utils/array/subtractArray'
-import { insertUserKeyword, deleteUserKeyword } from './private'
+import pv from './private'
 
 export const tagInDocumentService = async (documentId) => {
   const result = await repo.viewUserKeywordRepository(documentId)
@@ -24,8 +24,8 @@ export const overrideUserKeywordService = async (keywords, documentId) => {
   const newTag = subtractArrays(keywords, oldKeyword)
   const norTag = intersectArray(keywords, oldKeyword)
   const delTag = subtractArrays(oldKeyword, keywords)
-  const logAddTag = await insertUserKeyword(newTag, documentId)
-  const logDelTag = await deleteUserKeyword(delTag, documentId)
+  const logAddTag = await pv.insertUserKeyword(newTag, documentId)
+  const logDelTag = await pv.deleteUserKeyword(delTag, documentId)
   const result = parser.mergeLog(norTag, logAddTag, logDelTag)
   return result
 }
