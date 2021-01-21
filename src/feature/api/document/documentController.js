@@ -1,6 +1,6 @@
 import parser from './parserDocument'
 import {
-  getDocumentService, insertDocumentService, uploadDocumentService, softDeleteDocumentService,
+  getDocumentService, insertDocumentService, uploadDocumentService, softDeleteDocumentService, pdfDocumentService,
 } from './documentService'
 
 export const getDocumentController = async (pk) => {
@@ -32,5 +32,7 @@ export const insertDocumentController = async (req, context) => {
 export const uploadDocumentController = async (parent, args) => uploadDocumentService(args.file)
 
 export const softDeleteDocumentController = async (documentId) => softDeleteDocumentService(documentId)
+
+export const pdfDocumentController = async (documentId) => pdfDocumentService(documentId)
 
 export default {}

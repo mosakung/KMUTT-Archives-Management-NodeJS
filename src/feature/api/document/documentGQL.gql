@@ -1,5 +1,11 @@
 extend type Query {
   document(pk: Int!): TupleResultDocument
+  pdfDocument(documentId: Int!): PdfBase64
+}
+
+type PdfBase64{
+  pdfBase64: String
+  statusQuery: Boolean
 }
 
 type TupleResultDocument{
