@@ -1,6 +1,11 @@
 import parser from './parserDocument'
 import {
-  getDocumentService, insertDocumentService, uploadDocumentService, softDeleteDocumentService, updateDocumentService,
+  getDocumentService,
+  insertDocumentService,
+  uploadDocumentService,
+  softDeleteDocumentService,
+  updateDocumentService,
+  pdfDocumentService,
 } from './documentService'
 
 import isDate from '../../../utils/date/isDate'
@@ -44,5 +49,7 @@ export const updateDocumentController = async (documentId, body) => {
 export const uploadDocumentController = async (parent, args) => uploadDocumentService(args.file)
 
 export const softDeleteDocumentController = async (documentId) => softDeleteDocumentService(documentId)
+
+export const pdfDocumentController = async (documentId) => pdfDocumentService(documentId)
 
 export default {}

@@ -1,4 +1,7 @@
-import { createWriteStream, unlinkSync, readFileSync } from 'fs'
+import {
+  createWriteStream, unlinkSync, readFileSync,
+  promises as fsp,
+} from 'fs'
 
 import djangoRequest from '../../django-request/djangoRequest'
 import parser from './parserDocument'
@@ -192,5 +195,19 @@ export const uploadDocumentService = async (fileUpload) => {
 }
 
 export const softDeleteDocumentService = async (documentId) => repo.deleteDocumentSoft(documentId)
+
+export const pdfDocumentService = async (documentId) => {
+  const { path } = await repo.selectDocument(documentId)
+  try {
+    const pdfFile = await fsp.readFile(path, { encoding: 'base64' }, (err, data) => {
+      if (err) throw err
+      return data
+    })
+    return { pdfBase64: `data:application/pdf;base64,${pdfFile}`, statusQuery: true }
+  } catch (err) {
+    console.log('error read file pdf', err)
+  }
+  return { statusQuery: false }
+}
 
 export default {}
