@@ -49,7 +49,7 @@ type ResultDocument {
   publisher: String,
   publisherEmail: String,
   contributor: String,
-  contributorRole: String,
+  contributorRole: [String],
   issuedDate: String,
   tag: [String],
   image: String,
@@ -65,8 +65,89 @@ type File {
 
 extend type Mutation {
   addDocument(body: AddDocumentInput!): ResultAddDocument
+  updateDocument(documentId: Int!, body: UpdateDocumentInput!): ResultUpdateDocument
   uploadDocument(file: Upload!): File!
   softDeleteDocument(documentId: Int!): Boolean
+}
+
+input UpdateDocumentInput {
+  statusProcessDocument: Int,
+  name: String,
+  version: Int,
+  path: String,
+  relation: [String],
+  type: [String],
+  dcTitle: String,
+  dcTitleAlternative: String,
+  dcDescriptionTableOfContents: String,
+  dcDescriptionNote: String,
+  dcDescriptionSummary: String,
+  dcDescriptionAbstract: String,
+  dcFormat: String,
+  dcFormatExtent: String,
+  dcIdentifierURL: String,
+  dcIdentifierISBN: String,
+  dcSource: String,
+  dcLanguage: String,
+  dcCoverageSpatial: String,
+  dcCoverageTemporal: String,
+  dcCoverageTemporalYear: String,
+  dcRights: String,
+  dcRightsAccess: String,
+  thesisDegreeName: String,
+  thesisDegreeLevel: String,
+  thesisDegreeDiscipline: String,
+  thesisDegreeGrantor: String,
+  creator: String,
+  creatorOrgname: String,
+  publisher: String,
+  publisherEmail: String,
+  contributor: String,
+  contributorRole: String,
+  issuedDate: String,
+}
+
+type UpdateDocumentPrevBody {
+  statusProcessDocument: Int,
+  name: String,
+  version: Int,
+  path: String,
+  relation: [String],
+  type: [String],
+  dcTitle: String,
+  dcTitleAlternative: String,
+  dcDescriptionTableOfContents: String,
+  dcDescriptionNote: String,
+  dcDescriptionSummary: String,
+  dcDescriptionAbstract: String,
+  dcFormat: String,
+  dcFormatExtent: String,
+  dcIdentifierURL: String,
+  dcIdentifierISBN: String,
+  dcSource: String,
+  dcLanguage: String,
+  dcCoverageSpatial: String,
+  dcCoverageTemporal: String,
+  dcCoverageTemporalYear: String,
+  dcRights: String,
+  dcRightsAccess: String,
+  thesisDegreeName: String,
+  thesisDegreeLevel: String,
+  thesisDegreeDiscipline: String,
+  thesisDegreeGrantor: String,
+  creator: String,
+  creatorOrgname: String,
+  publisher: String,
+  publisherEmail: String,
+  contributor: String,
+  contributorRole: String,
+  issuedDate: String,
+}
+
+type ResultUpdateDocument {
+  updatestatus: Boolean,
+  error: String,
+  prevBody: UpdateDocumentPrevBody
 }
 
 input AddDocumentInput {

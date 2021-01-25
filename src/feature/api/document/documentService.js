@@ -19,7 +19,9 @@ export const getDocumentService = async (pk) => {
   const rowCreator = await repo.selectIndexingCreatorDocument(rowDocument.index_creator)
   const rowCreatorOrgname = await repo.selectIndexingCreatorOrgnameDocument(rowDocument.index_creator_orgname)
   const rowPublisher = await repo.selectIndexingPublisherDocument(rowDocument.index_publisher)
+  const rowPublisherEmail = await repo.selectIndexingPublisherEmailDocument(rowDocument.index_publisher_email)
   const rowContributor = await repo.selectIndexingContributorDocument(rowDocument.index_contributor)
+  const rowsContributorRole = await repo.selectContributorRoleDocument(rowDocument.index_contributor)
   const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
   const date = rowIssuedDate.issued_date
   const publishs = `${date.getFullYear()}-${(`0${date.getMonth() + 1}`).slice(-2)}-${date.getDate()}`
@@ -70,9 +72,9 @@ export const getDocumentService = async (pk) => {
     creator: rowCreator.creator,
     creatorOrgName: rowCreatorOrgname.creator_orgname,
     publisher: rowPublisher.publisher,
-    publisherEmail: rowPublisher.publisher_email,
+    publisherEmail: rowPublisherEmail.publisher_email,
     contributor: rowContributor.contributor,
-    contributorRole: rowContributor.contributor_role,
+    contributorRole: rowsContributorRole,
     issuedDate: publishs,
     status: rowDocument.status_process_document,
     tag,
@@ -104,6 +106,59 @@ export const insertDocumentService = async (document, { user }) => {
     }
   }
   return false
+}
+
+export const updateDocumentService = async (documentId, body) => {
+  const funRename = parser.rename
+
+  const typeSet = []
+  const relationSet = []
+  const newIndexDic = {}
+  const bodyDocumentUpdate = {}
+
+  Object.keys(body).forEach((key) => {
+    if (body[key] !== '' && body[key] !== null) {
+      if (key === 'type') {
+        typeSet.push(...body[key])
+      } else if (key === 'relation') {
+        relationSet.push(...body[key])
+      } else if (
+        key === 'creator'
+        || key === 'creatorOrgname'
+        || key === 'publisher'
+        || key === 'publisherEmail'
+        || key === 'contributor'
+        || key === 'contributorRole'
+        || key === 'issuedDate'
+      ) {
+        newIndexDic[key] = body[key]
+      } else {
+        bodyDocumentUpdate[funRename(key)] = body[key]
+      }
+    }
+  })
+
+  const bodyOverrideTypes = parser.bodyInsertType(typeSet, documentId)
+  const bodyOverrideRelations = parser.bodyInsertRelation(relationSet, documentId)
+
+  await repo.overrideTypeDocument(bodyOverrideTypes, documentId)
+  await repo.overrideRelationDocument(bodyOverrideRelations, documentId)
+
+  const documentInformation = await repo.selectDocument(documentId)
+
+  const bodyUpdateIndex = parser.mergeUpdateIndexDetailDocument(newIndexDic, documentInformation)
+
+  await repo.overrideCreatorDocument(bodyUpdateIndex, documentId)
+  await repo.overrideCreatorOrgnameDocument(bodyUpdateIndex, documentId)
+  await repo.overridePublisherDocument(bodyUpdateIndex, documentId)
+  await repo.overridePublisherEmailDocument(bodyUpdateIndex, documentId)
+  await repo.overrideIssuedDateDocument(bodyUpdateIndex, documentId)
+
+  const indexContributor = await repo.overrideContributorDocument(bodyUpdateIndex, documentId)
+
+  await repo.manageContributorRole(bodyUpdateIndex, indexContributor)
+
+  return { updatestatus: true, error: null, prevBody: body }
 }
 
 export const uploadDocumentService = async (fileUpload) => {
