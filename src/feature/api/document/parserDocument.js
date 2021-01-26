@@ -52,6 +52,62 @@ const parserDocument = {
   resultDcType: (param) => param.map((value) => (
     value.DC_type
   )),
+  rename: (name) => {
+    const nameList = {
+      statusProcessDocument: 'status_process_document',
+      name: 'name',
+      version: 'version',
+      path: 'path',
+      dcTitle: 'DC_title',
+      dcTitleAlternative: 'DC_title_alternative',
+      dcDescriptionTableOfContents: 'DC_description_table_of_contents',
+      dcDescriptionNote: 'DC_description_note',
+      dcDescriptionSummary: 'DC_description_summary',
+      dcDescriptionAbstract: 'DC_description_abstract',
+      dcFormat: 'DC_format',
+      dcFormatExtent: 'DC_format_extent',
+      dcIdentifierURL: 'DC_identifier_URL',
+      dcIdentifierISBN: 'DC_identifier_ISBN',
+      dcSource: 'DC_source',
+      dcLanguage: 'DC_language',
+      dcCoverageSpatial: 'DC_coverage_spatial',
+      dcCoverageTemporal: 'DC_coverage_temporal',
+      dcCoverageTemporalYear: 'DC_coverage_temporal_year',
+      dcRights: 'DC_rights',
+      dcRightsAccess: 'DC_rights_access',
+      thesisDegreeName: 'thesis_degree_name',
+      thesisDegreeLevel: 'thesis_degree_level',
+      thesisDegreeDiscipline: 'thesis_degree_discipline',
+      thesisDegreeGrantor: 'thesis_degree_grantor',
+    }
+
+    return nameList[name]
+  },
+  bodyInsertType: (types, documentId) => types.map((type) => ({ DC_type: type, index_document_id: documentId })),
+  bodyInsertRelation: (relations, documentId) => relations.map((relation) => ({ DC_relation: relation, index_document_id: documentId })),
+  mergeUpdateIndexDetailDocument: (newIndex, prevDocument) => {
+    const rename = {
+      corpus: {
+        creator: ['creator', 'index_creator'],
+        creatorOrgname: ['creator_orgname', 'index_creator_orgname'],
+        publisher: ['publisher', 'index_publisher'],
+        publisherEmail: ['publisher_email', 'index_publisher_email'],
+        contributor: ['contributor', 'index_contributor'],
+        contributorRole: ['contributor_role', 'index_contributor'],
+        issuedDate: ['issued_date', 'index_issued_date'],
+      },
+      start(name) {
+        return this.corpus[name] ? this.corpus[name] : null
+      },
+    }
+    return Object.keys(rename.corpus).map((el) => {
+      const keyDBs = rename.start(el)
+      if (keyDBs[1] in prevDocument) {
+        return { indexname: keyDBs[0], indexTerm: prevDocument[keyDBs[1]], newValue: newIndex[el] ? newIndex[el] : null }
+      }
+      return { }
+    })
+  },
 }
 
 export default parserDocument
