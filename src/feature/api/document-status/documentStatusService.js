@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs'
+import { promises as fsp } from 'fs'
 import repo from './documentStatusRepository'
 import djangoRequest from '../../django-request/djangoRequest'
 import parser from './parserDocumentStatus'
@@ -11,13 +11,13 @@ export const documentStatusMultipleService = async (userId) => {
     const rowsPageRaw = await repo.selectPageInDocument(documentId)
     const rowsPage = parser.page(rowsPageRaw)
     const path = row.pathImage
-    const resultImage = readFileSync(`${path}/page${row.pageStart}.jpg`, { encoding: 'base64' }, (error, data) => {
+    const resultImage = row.status >= 2 ? await fsp.readFile(`${path}/page${row.pageStart}.jpg`, { encoding: 'base64' }, (error, data) => {
       if (error) {
         return error
       }
       return data
-    })
-    return { ...row, pages: rowsPage, image: row.status > 2 ? resultImage : null }
+    }) : null
+    return { ...row, pages: rowsPage, image: resultImage }
   }))
 
   return documentSet
@@ -31,12 +31,13 @@ export const documentStatusService = async (documentId, userId) => {
   const path = rowDocumentRaw[0].path_image
   let resultImage = null
   try {
-    resultImage = readFileSync(`${path}/page${rowDocumentRaw[0].page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
-      if (error) {
-        return error
-      }
-      return data
-    })
+    resultImage = rowDocument[0].status >= 2
+      ? await fsp.readFile(`${path}/page${rowDocumentRaw[0].page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+        if (error) {
+          return error
+        }
+        return data
+      }) : null
   } catch (err) {
     if (err.code !== 'ENOENT') {
       console.log(err)
@@ -65,7 +66,7 @@ export const keywordInPageService = async (documentId, userId, pageId) => {
   }
   const rowDocumentRaw = await repo.selectDocumentById(documentId, userId)
   const path = rowDocumentRaw[0].path_image
-  const resultImage = readFileSync(`${path}/page${pageId}.jpg`, { encoding: 'base64' }, (error, data) => {
+  const resultImage = await fsp.readFile(`${path}/page${pageId}.jpg`, { encoding: 'base64' }, (error, data) => {
     if (error) {
       return error
     }

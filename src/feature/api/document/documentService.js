@@ -1,5 +1,5 @@
 import {
-  createWriteStream, unlinkSync, readFileSync,
+  createWriteStream, unlinkSync,
   promises as fsp,
 } from 'fs'
 
@@ -25,9 +25,12 @@ export const getDocumentService = async (pk) => {
   const rowContributor = await repo.selectIndexingContributorDocument(rowDocument.index_contributor)
   const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
   const date = rowIssuedDate.issued_date
-  const publishs = `${date.getFullYear()}-${(`0${date.getMonth() + 1}`).slice(-2)}-${date.getDate()}`
+  let publishs = null
+  if (date) {
+    publishs = `${date.getFullYear()}-${(`0${date.getMonth() + 1}`).slice(-2)}-${date.getDate()}`
+  }
   const tag = await tagInDocumentService(pk)
-  const resultImage = readFileSync(`${rowDocument.path_image}/page${rowDocument.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
+  const resultImage = await fsp.readFile(`${rowDocument.path_image}/page${rowDocument.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
     if (error) {
       return error
     }

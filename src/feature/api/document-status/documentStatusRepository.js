@@ -13,7 +13,8 @@ const documentStatusRepository = {
   },
   selectDocumentById: async (documentId, userId) => {
     const result = await db
-      .select('document_id', 'name', 'version', 'status_process_document', 'path_image', 'rec_create_at', 'DC_title', 'page_start')
+      .select('document_id', 'name', 'version', 'status_process_document', 'path_image',
+        'rec_create_at', 'DC_title', 'page_start', 'status_process_document')
       .from('document')
       .where('document_id', documentId)
       .andWhere('rec_create_by', userId)
