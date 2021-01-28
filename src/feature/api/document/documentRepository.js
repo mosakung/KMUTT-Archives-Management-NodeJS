@@ -315,6 +315,7 @@ const documentRepository = {
     }
     return true
   },
+  updateDocument: async (body, documnetId) => db('document').where('document_id', documnetId).update(body),
 }
 
 export default documentRepository

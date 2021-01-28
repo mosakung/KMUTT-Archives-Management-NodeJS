@@ -21,7 +21,7 @@ export const documentResolver = {
   Mutation: {
     // addDocument: async (body) => insertDocumentController(body),
     addDocument: (_, { body }, context) => insertDocumentController(body, context),
-    updateDocument: (_, { documentId, body }) => updateDocumentController(documentId, body),
+    updateDocument: (_, { documentId, body }, context) => updateDocumentController(documentId, body, context),
     uploadDocument: (parent, args) => uploadDocumentController(parent, args),
     softDeleteDocument: (_, { documentId }) => softDeleteDocumentController(documentId),
   },

@@ -108,6 +108,30 @@ const parserDocument = {
       return { }
     })
   },
+  updateDocument: (param, userId, datetime) => ({
+    DC_title_alternative: param.DC_title_alternative !== undefined ? param.DC_title_alternative : null,
+    DC_description_table_of_contents: param.DC_description_table_of_contents !== undefined ? param.DC_description_table_of_contents : null,
+    DC_description_summary: param.DC_description_summary !== undefined ? param.DC_description_summary : null,
+    DC_description_abstract: param.DC_description_abstract !== undefined ? param.DC_description_abstract : null,
+    DC_description_note: param.DC_description_note !== undefined ? param.DC_description_note : null,
+    DC_format: param.DC_format !== undefined ? param.DC_format : null,
+    DC_format_extent: param.DC_format_extent !== undefined ? param.DC_format_extent : null,
+    DC_identifier_URL: param.DC_identifier_URL !== undefined ? param.DC_identifier_URL : null,
+    DC_identifier_ISBN: param.DC_identifier_ISBN !== undefined ? param.DC_identifier_ISBN : null,
+    DC_source: param.DC_source !== undefined ? param.DC_source : null,
+    DC_language: param.DC_language !== undefined ? param.DC_language : null,
+    DC_coverage_spatial: param.DC_coverage_spatial !== undefined ? param.DC_coverage_spatial : null,
+    DC_coverage_temporal_year: param.DC_coverage_temporal_year !== undefined ? param.DC_coverage_temporal_year : null,
+    DC_coverage_temporal: param.DC_coverage_temporal !== undefined ? param.DC_coverage_temporal : null,
+    DC_rights: param.DC_rights !== undefined ? param.DC_rights : null,
+    DC_rights_access: param.DC_rights_access !== undefined ? param.DC_rights_access : null,
+    thesis_degree_name: param.thesis_degree_name !== undefined ? param.thesis_degree_name : null,
+    thesis_degree_level: param.thesis_degree_level !== undefined ? param.thesis_degree_level : null,
+    thesis_degree_discipline: param.thesis_degree_discipline !== undefined ? param.thesis_degree_discipline : null,
+    thesis_degree_grantor: param.thesis_degree_grantor !== undefined ? param.thesis_degree_grantor : null,
+    rec_modified_at: datetime,
+    rec_modified_by: userId,
+  }),
 }
 
 export default parserDocument

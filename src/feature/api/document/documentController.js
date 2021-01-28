@@ -41,9 +41,10 @@ export const insertDocumentController = async (req, context) => {
   return respones
 }
 
-export const updateDocumentController = async (documentId, body) => {
+export const updateDocumentController = async (documentId, body, context) => {
   if (body.issuedDate !== '' && body.issuedDate !== null && isDate(body.issuedDate)) return { error: 'issued date is not date', prevBody: body }
-  return updateDocumentService(documentId, body)
+  if (context.user === undefined) return { error: 'not user detail', prevBody: body }
+  return updateDocumentService(documentId, body, context.user)
 }
 
 export const uploadDocumentController = async (parent, args) => uploadDocumentService(args.file)

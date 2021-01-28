@@ -114,7 +114,7 @@ export const insertDocumentService = async (document, { user }) => {
   return false
 }
 
-export const updateDocumentService = async (documentId, body) => {
+export const updateDocumentService = async (documentId, body, user) => {
   const funRename = parser.rename
 
   const typeSet = []
@@ -163,6 +163,10 @@ export const updateDocumentService = async (documentId, body) => {
   const indexContributor = await repo.overrideContributorDocument(bodyUpdateIndex, documentId)
 
   await repo.manageContributorRole(bodyUpdateIndex, indexContributor)
+
+  const bodyDocument2Update = parser.updateDocument(bodyDocumentUpdate, user.id, new Date())
+
+  await repo.updateDocument(bodyDocument2Update, documentId)
 
   return { updatestatus: true, error: null, prevBody: body }
 }
