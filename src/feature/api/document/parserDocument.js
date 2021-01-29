@@ -110,6 +110,7 @@ const parserDocument = {
   },
   updateDocument: (param, userId, datetime) => ({
     DC_title_alternative: param.DC_title_alternative !== undefined ? param.DC_title_alternative : null,
+    DC_title: param.DC_title !== undefined ? param.DC_title : null,
     DC_description_table_of_contents: param.DC_description_table_of_contents !== undefined ? param.DC_description_table_of_contents : null,
     DC_description_summary: param.DC_description_summary !== undefined ? param.DC_description_summary : null,
     DC_description_abstract: param.DC_description_abstract !== undefined ? param.DC_description_abstract : null,
