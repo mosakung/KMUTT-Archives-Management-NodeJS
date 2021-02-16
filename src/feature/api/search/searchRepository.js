@@ -27,6 +27,14 @@ const searchRepository = {
       .andWhere('rec_status', 1)
     return row
   },
+  selectDcTitle: async (word) => {
+    const rows = await db
+      .select('document_id', 'DC_title')
+      .from('document')
+      .where('DC_title', 'like', `%${word}%`)
+
+    return rows
+  },
 }
 
 export default searchRepository

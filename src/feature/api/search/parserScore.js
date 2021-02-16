@@ -28,6 +28,12 @@ const parserScore = {
     })
     return dictResult
   },
+  mergeDocumentRelevance: (rowsTitle, rowsInformationRetrieval) => {
+    rowsTitle.forEach((el) => {
+      rowsInformationRetrieval.unshift({ idDocument: el.document_id, relevanceScore: -1 })
+    })
+    return rowsInformationRetrieval
+  },
 }
 
 export default parserScore

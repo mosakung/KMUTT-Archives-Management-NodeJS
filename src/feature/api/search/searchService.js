@@ -7,7 +7,8 @@ export const searchService = async (fulltext) => {
   const { tokens } = resDjango.output
   const lengthToken = tokens.length
 
-  const keySearch = tokens.filter((x) => x !== ' ')
+  const keySearchCleanSpace = tokens.filter((x) => x !== ' ')
+  const keySearch = keySearchCleanSpace.map((key) => key.replace(/\s+/g, ''))
 
   const retrievalTerm = await Promise.all(keySearch.map(async (element) => ({ termId: await repo.selectTermId(element), keyword: element })))
   const keywordDeepcut = retrievalTerm.map((element) => ({ keyword: element.keyword, used: element.termId !== null }))
@@ -24,6 +25,7 @@ export const searchService = async (fulltext) => {
   const promiseFilterDocument = await Promise.all(uniqueDocument.map(async (docId) => {
     const result = await repo.selectFinishDocument(docId)
     if (result.length === 0) {
+      // return docId
       return -1
     }
     return docId
@@ -55,9 +57,13 @@ export const searchService = async (fulltext) => {
 
   documentRelevanceSet.sort((n1, n2) => n2.relevanceScore - n1.relevanceScore)
 
+  const titleSearchSet = await repo.selectDcTitle(fulltext.trim())
+
+  const documentRelevanceResult = parser.mergeDocumentRelevance(titleSearchSet, documentRelevanceSet)
+
   const result = {
     foundDocument: documentRelevanceSet.length,
-    documentRelevance: documentRelevanceSet,
+    documentRelevance: documentRelevanceResult,
     efficiencyInputSearch: {
       fulltext,
       keywordDeepcut,
