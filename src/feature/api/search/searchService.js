@@ -2,13 +2,16 @@ import djangoRequest from '../../django-request/djangoRequest'
 import repo from './searchRepository'
 import parser from './parserScore'
 
-export const searchService = async (fulltext) => {
+export const searchService = async (fulltext, similarSize = 2, similarThreshold = 0.72) => {
   const resDjango = await djangoRequest.post('deepcut/', { fulltext }, true)
-  const { tokens } = resDjango.output
+  const { tokens, similarTokens } = resDjango.output
   const lengthToken = tokens.length
 
   const keySearchCleanSpace = tokens.filter((x) => x !== ' ')
-  const keySearch = keySearchCleanSpace.map((key) => key.replace(/\s+/g, ''))
+
+  const tokenPsSimilar = parser.extendSimilarWord(keySearchCleanSpace, similarTokens, similarSize, similarThreshold)
+
+  const keySearch = tokenPsSimilar.map((key) => key.replace(/\s+/g, ''))
 
   const retrievalTerm = await Promise.all(keySearch.map(async (element) => ({ termId: await repo.selectTermId(element), keyword: element })))
   const keywordDeepcut = retrievalTerm.map((element) => ({ keyword: element.keyword, used: element.termId !== null }))
@@ -57,13 +60,18 @@ export const searchService = async (fulltext) => {
 
   documentRelevanceSet.sort((n1, n2) => n2.relevanceScore - n1.relevanceScore)
 
-  const titleSearchSet = await repo.selectDcTitle(fulltext.trim())
+  const originalToken = fulltext.trim().split(' ')
 
+  const titleSearchSet = await Promise.all(originalToken.map(async (oriToken) => repo.selectDcTitle(oriToken)))
+
+  // const documentRelevanceResult = []
   const documentRelevanceResult = parser.mergeDocumentRelevance(titleSearchSet, documentRelevanceSet)
+
+  const documentRelevanceResultUnique = parser.uniqueRelevance(documentRelevanceResult)
 
   const result = {
     foundDocument: documentRelevanceSet.length,
-    documentRelevance: documentRelevanceResult,
+    documentRelevance: documentRelevanceResultUnique,
     efficiencyInputSearch: {
       fulltext,
       keywordDeepcut,

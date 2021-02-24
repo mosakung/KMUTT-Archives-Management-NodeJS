@@ -28,11 +28,39 @@ const parserScore = {
     })
     return dictResult
   },
-  mergeDocumentRelevance: (rowsTitle, rowsInformationRetrieval) => {
-    rowsTitle.forEach((el) => {
-      rowsInformationRetrieval.unshift({ idDocument: el.document_id, relevanceScore: -1 })
+  mergeDocumentRelevance: (rowsTitleSet, rowsInformationRetrieval) => {
+    rowsTitleSet.forEach((set) => {
+      set.forEach((el) => {
+        rowsInformationRetrieval.unshift({ idDocument: el.document_id, relevanceScore: -1 })
+      })
     })
     return rowsInformationRetrieval
+  },
+  extendSimilarWord: (mainToken, similarToken, size, thershold) => {
+    const resultToken = []
+    similarToken.forEach((elSimilar) => {
+      const valueElement = []
+      elSimilar.value.sort((n1, n2) => n2.score - n1.score)
+      elSimilar.value.forEach((elValue) => {
+        if (valueElement.length < size && elValue.score >= thershold) {
+          valueElement.push(elValue.token)
+        }
+      })
+      resultToken.push(...valueElement)
+    })
+    return [...mainToken, ...resultToken]
+  },
+  uniqueRelevance: (arrObj) => {
+    const unique = []
+    const result = []
+    arrObj.forEach((element) => {
+      const { idDocument } = element
+      if (!unique.includes(idDocument)) {
+        unique.push(idDocument)
+        result.push(element)
+      }
+    })
+    return result
   },
 }
 
