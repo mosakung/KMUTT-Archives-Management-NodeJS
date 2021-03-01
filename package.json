@@ -6,7 +6,8 @@
   "scripts": {
     "start": "set NODE_ENV=production&& babel-node src/index.js",
     "nodemon": "set NODE_ENV=development&& nodemon src/index.js --exec babel-node -e js",
-    "migrate:dev": "set NODE_ENV=development&& babel-node src/db/migrate/migrate.js"
+    "migrate:dev": "set NODE_ENV=development&& babel-node src/db/migrate/migrate.js",
+    "update:TFIDF:dev": "set NODE_ENV=development&& babel-node src/feature/corn-job/tfidf/manual.js"
   },
   "repository": "https://github.com/mosakung/prj-tf-idf-compact.git",
   "author": "Annop <mosakung@live.com>",
