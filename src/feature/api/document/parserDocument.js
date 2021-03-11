@@ -1,7 +1,6 @@
 const parserDocument = {
   document: (param, { user }) => {
     if (!(param.name && param.path && param.DC_title)) { return false }
-
     const document = {
       add_version: param.addVersion,
       page_start: param.startPage,
@@ -41,6 +40,9 @@ const parserDocument = {
       rec_modified_by: user.id,
     }
 
+    if (document.DC_relation[0] === '' && document.DC_relation.length === 1) {
+      document.DC_relation = []
+    }
     return document
   },
   resultDcKeyword: (param) => param.map((value) => (
