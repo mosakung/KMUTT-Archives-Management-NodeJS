@@ -17,14 +17,20 @@ export const getDocumentService = async (pk) => {
     return { statusQuery: false }
   }
   const rowsKeyword = await repo.selectDcKeyword(pk)
+  const contributorId = await repo.selectDcContributors(pk)
   const rowsRelation = await repo.selectDcRelation(pk)
   const rowsType = await repo.selectDcType(pk)
   const rowCreator = await repo.selectIndexingCreatorDocument(rowDocument.index_creator)
   const rowCreatorOrgname = await repo.selectIndexingCreatorOrgnameDocument(rowDocument.index_creator_orgname)
   const rowPublisher = await repo.selectIndexingPublisherDocument(rowDocument.index_publisher)
   const rowPublisherEmail = await repo.selectIndexingPublisherEmailDocument(rowDocument.index_publisher_email)
-  const rowContributor = await repo.selectIndexingContributorDocument(rowDocument.index_contributor)
-  const rowsContributorRole = await repo.selectContributorRoleDocument(rowDocument.index_contributor)
+
+  const rowsContributor = await Promise.all(contributorId.map(async (indexContributor) => {
+    const contributorName = await repo.selectIndexingContributorDocument(indexContributor)
+    const contributorRoles = await repo.selectContributorRoleDocument(indexContributor)
+    return { name: contributorName, roles: contributorRoles }
+  }))
+
   const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
   const date = rowIssuedDate.issued_date
   let publishs = null
@@ -32,6 +38,7 @@ export const getDocumentService = async (pk) => {
     publishs = `${date.getFullYear()}-${(`0${date.getMonth() + 1}`).slice(-2)}-${date.getDate()}`
   }
   const tag = await tagInDocumentService(pk)
+
   const resultImage = await fsp.readFile(`${rowDocument.path_image}/page${rowDocument.page_start}.jpg`, { encoding: 'base64' }, (error, data) => {
     if (error) {
       return error
@@ -79,8 +86,7 @@ export const getDocumentService = async (pk) => {
     creatorOrgName: rowCreatorOrgname.creator_orgname,
     publisher: rowPublisher.publisher,
     publisherEmail: rowPublisherEmail.publisher_email,
-    contributor: rowContributor.contributor,
-    contributorRole: rowsContributorRole,
+    contributor: rowsContributor,
     issuedDate: publishs,
     status: rowDocument.status_process_document,
     tag,
@@ -119,6 +125,8 @@ export const updateDocumentService = async (documentId, body, user) => {
 
   const typeSet = []
   const relationSet = []
+  const contributorSet = []
+  const contributorRoleSet = []
   const newIndexDic = {}
   const bodyDocumentUpdate = {}
 
@@ -128,13 +136,17 @@ export const updateDocumentService = async (documentId, body, user) => {
         typeSet.push(...body[key])
       } else if (key === 'relation') {
         relationSet.push(...body[key])
+      } else if (key === 'contributor') {
+        contributorSet.push(...body[key])
+      } else if (key === 'contributorRole') {
+        contributorRoleSet.push(...body[key])
       } else if (
         key === 'creator'
         || key === 'creatorOrgname'
         || key === 'publisher'
         || key === 'publisherEmail'
-        || key === 'contributor'
-        || key === 'contributorRole'
+        // || key === 'contributor'
+        // || key === 'contributorRole'
         || key === 'issuedDate'
       ) {
         newIndexDic[key] = body[key]
@@ -144,12 +156,19 @@ export const updateDocumentService = async (documentId, body, user) => {
     }
   })
 
+  /* Type Relations */
   const bodyOverrideTypes = parser.bodyInsertType(typeSet, documentId)
   const bodyOverrideRelations = parser.bodyInsertRelation(relationSet, documentId)
 
   await repo.overrideTypeDocument(bodyOverrideTypes, documentId)
   await repo.overrideRelationDocument(bodyOverrideRelations, documentId)
 
+  /* Contributor */
+  await Promise.all(contributorSet.map((contributor) => {
+    
+  }))
+
+  /* Fine Index in Document */
   const documentInformation = await repo.selectDocument(documentId)
 
   const bodyUpdateIndex = parser.mergeUpdateIndexDetailDocument(newIndexDic, documentInformation)
@@ -160,10 +179,7 @@ export const updateDocumentService = async (documentId, body, user) => {
   await repo.overridePublisherEmailDocument(bodyUpdateIndex, documentId)
   await repo.overrideIssuedDateDocument(bodyUpdateIndex, documentId)
 
-  const indexContributor = await repo.overrideContributorDocument(bodyUpdateIndex, documentId)
-
-  await repo.manageContributorRole(bodyUpdateIndex, indexContributor)
-
+  /* Update Modified */
   const bodyDocument2Update = parser.updateDocument(bodyDocumentUpdate, user.id, new Date())
 
   await repo.updateDocument(bodyDocument2Update, documentId)

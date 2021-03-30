@@ -8,7 +8,7 @@ export const searchGraphql = gql(fileGraphqlType)
 
 export const searchResolver = {
   Query: {
-    searchDocument: (_, { fulltext }) => searchController(fulltext),
+    searchDocument: (_, { searchSet }) => searchController(searchSet),
   },
 }
 

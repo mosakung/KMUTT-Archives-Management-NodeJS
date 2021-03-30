@@ -1,15 +1,26 @@
 extend type Query {
-  searchDocument(fulltext: String!): TupleSearchResult
+  searchDocument(searchSet: InputSearch): TupleSearchResult
+}
+
+input InputSearch {
+  search: String!,
+  contributor: [String]!,
+  contributorRole: [String]!,
+  creator: [String]!,
+  creatorOrganizationName: [String]!,
+  publisher: [String]!,
+  year: [Int]!
 }
 
 type TupleSearchResult {
   foundDocument: Int,
   documentRelevance: [DocumentRelevance],
-  efficiencyInputSearch: EfficiencyInputSearch
+  efficiencyInputSearch: EfficiencyInputSearch,
+  errorMessage: String,
 }
 
 type DocumentRelevance {
-  idDocument: Int,
+  documentId: Int,
   relevanceScore: Float
 }
 

@@ -32,6 +32,10 @@ export const insertDocumentController = async (req, context) => {
     return { status: false, message: 'was contributor role but no contributor', prevBody: {} }
   }
 
+  if (document.DC_issued_date !== '' && document.DC_issued_date !== null && isDate(document.DC_issued_date)) {
+    return { message: 'issued date is not date', prevBody: body }
+  }
+
   const respones = await insertDocumentService(document, context)
 
   if (!respones) {
@@ -44,6 +48,7 @@ export const insertDocumentController = async (req, context) => {
 export const updateDocumentController = async (documentId, body, context) => {
   if (body.issuedDate !== '' && body.issuedDate !== null && isDate(body.issuedDate)) return { error: 'issued date is not date', prevBody: body }
   if (context.user === undefined) return { error: 'not user detail', prevBody: body }
+  if (body.contributor.length !== body.contributorRole.length) return { error: 'contributor not match contributorRole data', prevBody: body }
   return updateDocumentService(documentId, body, context.user)
 }
 

@@ -21,10 +21,14 @@ const documentRepository = {
     const result = await db.select().from('dc_type').where('index_document_id', pkDocument)
     return result
   },
+  selectDcContributors: async (pkDocument) => {
+    const relationContributors = await db.select().from('dc_contributors').where('index_document_id', pkDocument)
+    return relationContributors.map((element) => element.index_contributor_id)
+  },
   selectIndexingContributorDocument: async (pk) => {
     if (pk === null || pk === undefined) return {}
     const result = await db.select().from('indexing_contributor_document').where('indexing_contributor_id', pk)
-    return result[0]
+    return result[0].contributor
   },
   selectContributorRoleDocument: async (indexContributor) => {
     if (indexContributor === null || indexContributor === undefined) return []
@@ -256,66 +260,20 @@ const documentRepository = {
     }
     return true
   },
-  overrideContributorDocument: async (body, documentId) => {
-    const bodyFind = body.find((x) => x.indexname === 'contributor')
-    const globalIndexContributor = -1
-    if (!bodyFind) return false
-    const { indexTerm, newValue } = bodyFind
-    if (indexTerm) {
-      await db('document')
-        .where('document_id', documentId)
-        .andWhere('rec_status', 1)
-        .update('index_contributor', null)
-      await db('indexing_contributor_document')
-        .where('indexing_contributor_id', indexTerm)
-        .decrement('frequency', 1)
-    }
-    if (newValue) {
-      const rowIndex = await db
-        .select()
-        .from('indexing_contributor_document')
-        .where('contributor', newValue)
-      if (rowIndex.length !== 0) {
-        await db('indexing_contributor_document')
-          .where('indexing_contributor_id', rowIndex[0].indexing_contributor_id)
-          .increment('frequency', 1)
-        await db('document')
-          .where('document_id', documentId)
-          .andWhere('rec_status', 1)
-          .update('index_contributor', rowIndex[0].indexing_contributor_id)
-        return rowIndex[0].indexing_contributor_id
-      }
-      const inputPk = await db('indexing_contributor_document')
-        .insert({ contributor: newValue, frequency: 1 })
-      await db('document')
-        .where('document_id', documentId)
-        .andWhere('rec_status', 1)
-        .update('index_contributor', inputPk)
-      return inputPk[0]
-    }
-    return globalIndexContributor
-  },
-  manageContributorRole: async (body, indexContributor) => {
-    const bodyFind = body.find((x) => x.indexname === 'contributor_role')
-    if (!bodyFind) return false
-    const { newValue } = bodyFind
-    if (newValue) {
-      const rows = await db
-        .select()
-        .from('indexing_contributor_role_document')
-        .where('index_contributor', indexContributor)
-      const wasRole = rows.map((row) => {
-        if (row.contributor_role === newValue) return true
-        return false
-      })
-      if (!wasRole.includes(true)) {
-        await db('indexing_contributor_role_document')
-          .insert({ contributor_role: newValue, index_contributor: indexContributor })
-      }
-    }
-    return true
-  },
   updateDocument: async (body, documnetId) => db('document').where('document_id', documnetId).update(body),
+  clearContributor: async (documentId) => {
+    const subqueryContributor = db.select('index_contributor_id').from('dc_contributors').where('index_document_id', documentId)
+    await db('indexing_contributor_document').whereIn('indexing_contributor_id', subqueryContributor).decrement('frequency', 1)
+
+    const contributorFreqZero = db.select('indexing_contributor_id').from('indexing_contributor_document').where('frequency', 0)
+    await db('indexing_contributor_role_document').whereIn('index_contributor', contributorFreqZero).del()
+    await db('indexing_contributor_document').whereIn('indexing_contributor_id', contributorFreqZero).del()
+
+    await db('dc_contributors').where('index_document_id', documentId).del()
+  },
+  overrideContributorDocument: async (contributor, role, documentId) => {
+    const alreadyContributor = await db.select('indexing_contributor_id').from('indexing_contributor_document').where('contributor', contributor)
+  },
 }
 
 export default documentRepository

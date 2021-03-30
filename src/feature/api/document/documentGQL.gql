@@ -54,12 +54,16 @@ type ResultDocument {
   creatorOrgName: String,
   publisher: String,
   publisherEmail: String,
-  contributor: String,
-  contributorRole: [String],
+  contributor: [DocumentContributorSet],
   issuedDate: String,
   tag: [String],
   image: String,
   status: Int,
+}
+
+type DocumentContributorSet {
+  name: String,
+  roles: [String],
 }
 
 type File {
@@ -108,8 +112,8 @@ input UpdateDocumentInput {
   creatorOrgname: String,
   publisher: String,
   publisherEmail: String,
-  contributor: String,
-  contributorRole: String,
+  contributor: [String],
+  contributorRole: [String],
   issuedDate: String,
 }
 
@@ -188,8 +192,8 @@ input AddDocumentInput {
   DC_creator_orgname: String
   DC_publisher: String
   DC_publisher_email: String
-  DC_contributor: String
-  DC_contributor_role: String
+  DC_contributor: [String]
+  DC_contributor_role: [String]
   DC_issued_date: String
 }
 

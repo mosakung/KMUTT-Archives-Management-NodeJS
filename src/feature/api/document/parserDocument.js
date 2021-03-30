@@ -2,13 +2,32 @@ const parserDocument = {
   document: (param, { user }) => {
     if (!(param.name && param.path && param.DC_title)) { return false }
 
+    let {
+      DC_relation: dcRelation,
+      DC_type: dcType,
+      DC_contributor: dcContributor,
+      DC_contributor_role: dcContributorRole,
+    } = param
+
+    if (dcRelation.length === 1 && dcRelation[0] === '') dcRelation = null
+    else if (!dcRelation) dcRelation = null
+
+    if (dcType.length === 1 && dcType[0] === '') dcType = null
+    else if (!dcType) dcType = null
+
+    if (dcContributor.length === 1 && dcContributor[0] === '') dcContributor = null
+    else if (!dcContributor) dcContributor = null
+
+    if (dcContributorRole.length === 1 && dcContributorRole[0] === '') dcContributorRole = null
+    else if (!dcContributorRole) dcContributorRole = null
+
     const document = {
       add_version: param.addVersion,
       page_start: param.startPage,
       name: param.name,
       path: param.path,
-      DC_relation: param.DC_relation ? [...param.DC_relation] : null,
-      DC_type: param.DC_type ? [...param.DC_type] : null,
+      DC_relation: dcRelation,
+      DC_type: dcType,
       DC_title: param.DC_title,
       DC_title_alternative: param.DC_title_alternative !== '' ? param.DC_title_alternative : null,
       DC_description_table_of_contents: param.DC_description_table_of_contents !== '' ? param.DC_description_table_of_contents : null,
@@ -34,8 +53,8 @@ const parserDocument = {
       DC_creator_orgname: param.DC_creator_orgname !== '' ? param.DC_creator_orgname : null,
       DC_publisher: param.DC_publisher !== '' ? param.DC_publisher : null,
       DC_publisher_email: param.DC_publisher_email !== '' ? param.DC_publisher_email : null,
-      DC_contributor: param.DC_contributor !== '' ? param.DC_contributor : null,
-      DC_contributor_role: param.DC_contributor_role !== '' ? param.DC_contributor_role : null,
+      DC_contributor: dcContributor,
+      DC_contributor_role: dcContributorRole,
       DC_issued_date: param.DC_issued_date !== '' ? param.DC_issued_date : null,
       rec_create_by: user.id,
       rec_modified_by: user.id,
