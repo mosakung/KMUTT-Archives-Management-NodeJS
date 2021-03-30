@@ -60,6 +60,9 @@ const parserDocument = {
       rec_modified_by: user.id,
     }
 
+    if (document.DC_relation[0] === '' && document.DC_relation.length === 1) {
+      document.DC_relation = []
+    }
     return document
   },
   resultDcKeyword: (param) => param.map((value) => (

@@ -50,7 +50,7 @@ const userKeywordRepository = {
 
   updateIdfTerm: async (termId) => {
     const timestamp = db.fn.now()
-    const row = await db('document').count('document_id as value').where('rec_status', 1).havingBetween('status_process_document', [5, 6])
+    const row = await db('document').count('document_id as value').where('rec_status', 1).andWhereBetween('status_process_document', [5, 6])
     const N = row[0].value
     return db('term_word').update({ score_idf: db.raw(`?? / ${N}`, ['frequency']), rec_modified_at: timestamp }).where('term_word_id', termId)
   },
