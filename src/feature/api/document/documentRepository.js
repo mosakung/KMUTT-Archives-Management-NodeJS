@@ -267,12 +267,42 @@ const documentRepository = {
 
     const contributorFreqZero = db.select('indexing_contributor_id').from('indexing_contributor_document').where('frequency', 0)
     await db('indexing_contributor_role_document').whereIn('index_contributor', contributorFreqZero).del()
-    await db('indexing_contributor_document').whereIn('indexing_contributor_id', contributorFreqZero).del()
 
     await db('dc_contributors').where('index_document_id', documentId).del()
+
+    await db('indexing_contributor_document').whereIn('indexing_contributor_id', contributorFreqZero).del()
   },
   overrideContributorDocument: async (contributor, role, documentId) => {
-    const alreadyContributor = await db.select('indexing_contributor_id').from('indexing_contributor_document').where('contributor', contributor)
+    const subqueryContributor = db
+      .select('indexing_contributor_id')
+      .from('indexing_contributor_document')
+      .where('contributor', contributor)
+      .limit(1)
+
+    if ((await subqueryContributor).length === 0) {
+      await db('indexing_contributor_document').insert({ contributor, frequency: 1 })
+    } else {
+      await db('indexing_contributor_document').where('indexing_contributor_id', subqueryContributor).increment('frequency', 1)
+    }
+
+    const subqueryContributorRole = db
+      .select('indexing_contributor_role_id')
+      .from('indexing_contributor_role_document')
+      .where('contributor_role', role)
+      .andWhere('index_contributor', subqueryContributor)
+      .limit(1)
+
+    if ((await subqueryContributorRole).length === 0) {
+      await db('indexing_contributor_role_document')
+        .insert({ contributor_role: role, index_contributor: subqueryContributor })
+    }
+
+    console.log(await subqueryContributor)
+
+    await db('dc_contributors').insert({
+      index_contributor_id: subqueryContributor,
+      index_document_id: documentId,
+    })
   },
 }
 

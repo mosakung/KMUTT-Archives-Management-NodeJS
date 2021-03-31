@@ -164,9 +164,8 @@ export const updateDocumentService = async (documentId, body, user) => {
   await repo.overrideRelationDocument(bodyOverrideRelations, documentId)
 
   /* Contributor */
-  await Promise.all(contributorSet.map((contributor) => {
-    
-  }))
+  await repo.clearContributor(documentId)
+  await Promise.all(contributorSet.map((contributor, index) => repo.overrideContributorDocument(contributor, contributorRoleSet[index], documentId)))
 
   /* Fine Index in Document */
   const documentInformation = await repo.selectDocument(documentId)
