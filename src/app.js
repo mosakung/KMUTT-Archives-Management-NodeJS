@@ -10,6 +10,9 @@ import auth from './feature/midderware/auth'
 /* GQL Import */
 import serverGQL from './feature/apollo-server-express/server'
 
+/* CRON-JOB Import */
+import initializingCRON from './feature/corn-job/initializingCRON'
+
 /* EXPRESS JSON */
 const app = express()
 
@@ -24,6 +27,9 @@ if (app.get('env') === 'development') {
 app.use(auth)
 /* GraphQL */
 serverGQL.applyMiddleware({ app })
+
+/* CORN-JOB */
+initializingCRON.start()
 
 /* API */
 app.use(path)

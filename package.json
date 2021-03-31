@@ -25,11 +25,12 @@
     "knex": "^0.21.5",
     "morgan": "^1.10.0",
     "mysql2": "^2.2.1",
+    "node-cron": "^3.0.0",
     "password-hash": "^1.2.2",
     "python-shell": "^2.0.2"
   },
   "resolutions": {
-    "**/**/fs-capacitor":"^6.1.0",
+    "**/**/fs-capacitor": "^6.1.0",
     "**/graphql-upload": "^11.0.0"
   },
   "devDependencies": {

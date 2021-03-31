@@ -3,7 +3,9 @@ import upTFIDF from './updateTfIdf'
 console.log('Start update TFIDF score...')
 
 upTFIDF().then((res) => {
-  console.log(`${res[0].affectedRows} row update TFIDF score`)
+  const { idfAR, tfIdfAR } = res
+  console.log(`${idfAR} row update IDF score`)
+  console.log(`${tfIdfAR} row update TFIDF score`)
   process.exit(0)
 }).catch((err) => {
   console.error(err)

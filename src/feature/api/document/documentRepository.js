@@ -297,8 +297,6 @@ const documentRepository = {
         .insert({ contributor_role: role, index_contributor: subqueryContributor })
     }
 
-    console.log(await subqueryContributor)
-
     await db('dc_contributors').insert({
       index_contributor_id: subqueryContributor,
       index_document_id: documentId,
