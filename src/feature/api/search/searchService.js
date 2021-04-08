@@ -18,7 +18,9 @@ const mainSearchService = async (searchSet) => {
     year,
   } = searchSet
 
-  const { relevance, log } = await searchFeature(search)
+  const fulltextSearch = search.join(' ')
+
+  const { relevance, log } = await searchFeature(fulltextSearch)
 
   const relevanceIdSet = relevance.map((element) => element.idDocument)
 

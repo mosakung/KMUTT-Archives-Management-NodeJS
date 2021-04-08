@@ -9,17 +9,29 @@ const parserDocument = {
       DC_contributor_role: dcContributorRole,
     } = param
 
-    if (dcRelation.length === 1 && dcRelation[0] === '') dcRelation = null
-    else if (!dcRelation) dcRelation = null
+    if (dcRelation !== null) {
+      if (dcRelation[0] === '') {
+        dcRelation = null
+      }
+    } else if (!dcRelation) dcRelation = null
 
-    if (dcType.length === 1 && dcType[0] === '') dcType = null
-    else if (!dcType) dcType = null
+    if (dcType !== null) {
+      if (dcType[0] === '') {
+        dcType = null
+      }
+    } else if (!dcType) dcType = null
 
-    if (dcContributor.length === 1 && dcContributor[0] === '') dcContributor = null
-    else if (!dcContributor) dcContributor = null
+    if (dcContributor !== null) {
+      if (dcContributor[0] === '') {
+        dcContributor = null
+      }
+    } else if (!dcContributor) dcContributor = null
 
-    if (dcContributorRole.length === 1 && dcContributorRole[0] === '') dcContributorRole = null
-    else if (!dcContributorRole) dcContributorRole = null
+    if (dcContributorRole !== null) {
+      if (dcContributorRole[0] === '') {
+        dcContributorRole = null
+      }
+    } else if (!dcContributorRole) dcContributorRole = null
 
     const document = {
       add_version: param.addVersion,
@@ -60,9 +72,6 @@ const parserDocument = {
       rec_modified_by: user.id,
     }
 
-    if (document.DC_relation[0] === '' && document.DC_relation.length === 1) {
-      document.DC_relation = []
-    }
     return document
   },
   resultDcKeyword: (param) => param.map((value) => (

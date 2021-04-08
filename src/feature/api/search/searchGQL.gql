@@ -3,7 +3,7 @@ extend type Query {
 }
 
 input InputSearch {
-  search: String!,
+  search: [String]!,
   contributor: [String]!,
   contributorRole: [String]!,
   creator: [String]!,
