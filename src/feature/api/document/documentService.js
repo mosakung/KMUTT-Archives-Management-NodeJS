@@ -17,7 +17,7 @@ export const getDocumentService = async (pk) => {
     return { statusQuery: false }
   }
   const rowsKeyword = await repo.selectDcKeyword(pk)
-  const contributorId = await repo.selectDcContributors(pk)
+  const contributorAndRoleId = await repo.selectDcContributors(pk)
   const rowsRelation = await repo.selectDcRelation(pk)
   const rowsType = await repo.selectDcType(pk)
   const rowCreator = await repo.selectIndexingCreatorDocument(rowDocument.index_creator)
@@ -25,10 +25,10 @@ export const getDocumentService = async (pk) => {
   const rowPublisher = await repo.selectIndexingPublisherDocument(rowDocument.index_publisher)
   const rowPublisherEmail = await repo.selectIndexingPublisherEmailDocument(rowDocument.index_publisher_email)
 
-  const rowsContributor = await Promise.all(contributorId.map(async (indexContributor) => {
+  const rowsContributor = await Promise.all(contributorAndRoleId.map(async ({ indexContributor, indexContributorRole }) => {
     const contributorName = await repo.selectIndexingContributorDocument(indexContributor)
-    const contributorRoles = await repo.selectContributorRoleDocument(indexContributor)
-    return { name: contributorName, roles: contributorRoles }
+    const contributorRole = await repo.selectContributorRoleDocument(indexContributorRole)
+    return { name: contributorName, role: contributorRole }
   }))
 
   const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
@@ -227,7 +227,7 @@ export const pdfDocumentService = async (documentId) => {
     })
     return { pdfBase64: `data:application/pdf;base64,${pdfFile}`, statusQuery: true }
   } catch (err) {
-    console.log('error read file pdf', err)
+    console.error('error read file pdf', err)
   }
   return { statusQuery: false }
 }

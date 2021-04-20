@@ -40,7 +40,7 @@ export const documentStatusService = async (documentId, userId) => {
       }) : null
   } catch (err) {
     if (err.code !== 'ENOENT') {
-      console.log(err)
+      console.error(err)
     }
   }
 

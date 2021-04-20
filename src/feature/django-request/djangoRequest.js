@@ -22,7 +22,7 @@ djangoRequest.post = async function post(path, body, requireData = false) {
 
     return { res: true }
   } catch (err) {
-    console.log(err.message)
+    console.error(err.message)
     return { res: false }
   }
 }

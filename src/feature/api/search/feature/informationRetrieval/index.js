@@ -3,7 +3,11 @@ import djangoRequest from '../../../../django-request/djangoRequest'
 import parser from './parserIR'
 import repo from './IRrepository'
 
+import retrievalDefault from './retrievalDefault'
+
 const informationRetrieval = async (fulltext, similarSize = 2, similarThreshold = 0.72) => {
+  if (fulltext === '') return { relevance: await retrievalDefault(), log: null }
+
   /* Shoot API Django for Tokenizer */
   const responseAPI = await djangoRequest.post('deepcut/', { fulltext }, true)
 

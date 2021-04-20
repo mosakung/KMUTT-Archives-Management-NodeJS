@@ -63,7 +63,7 @@ type ResultDocument {
 
 type DocumentContributorSet {
   name: String,
-  roles: [String],
+  role: String,
 }
 
 type File {

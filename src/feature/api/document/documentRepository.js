@@ -23,17 +23,20 @@ const documentRepository = {
   },
   selectDcContributors: async (pkDocument) => {
     const relationContributors = await db.select().from('dc_contributors').where('index_document_id', pkDocument)
-    return relationContributors.map((element) => element.index_contributor_id)
+    return relationContributors.map((element) => ({
+      indexContributor: element.index_contributor_id,
+      indexContributorRole: element.index_contributor_role_id,
+    }))
   },
   selectIndexingContributorDocument: async (pk) => {
     if (pk === null || pk === undefined) return {}
     const result = await db.select().from('indexing_contributor_document').where('indexing_contributor_id', pk)
     return result[0].contributor
   },
-  selectContributorRoleDocument: async (indexContributor) => {
-    if (indexContributor === null || indexContributor === undefined) return []
-    const result = await db.select().from('indexing_contributor_role_document').where('index_contributor', indexContributor)
-    return result.map((el) => el.contributor_role)
+  selectContributorRoleDocument: async (indexContributorRole) => {
+    if (indexContributorRole === null || indexContributorRole === undefined) return {}
+    const result = await db.select().from('indexing_contributor_role_document').where('indexing_contributor_role_id', indexContributorRole)
+    return result[0].contributor_role
   },
   selectIndexingCreatorDocument: async (pk) => {
     if (pk === null || pk === undefined) return {}
@@ -265,11 +268,22 @@ const documentRepository = {
     const subqueryContributor = db.select('index_contributor_id').from('dc_contributors').where('index_document_id', documentId)
     await db('indexing_contributor_document').whereIn('indexing_contributor_id', subqueryContributor).decrement('frequency', 1)
 
-    const contributorFreqZero = db.select('indexing_contributor_id').from('indexing_contributor_document').where('frequency', 0)
-    await db('indexing_contributor_role_document').whereIn('index_contributor', contributorFreqZero).del()
+    const rawDcContributors = await db.select().from('dc_contributors').where('index_document_id', documentId)
+    const contributorRoleWaitState = rawDcContributors.map((element) => element.index_contributor_role_id)
 
     await db('dc_contributors').where('index_document_id', documentId).del()
 
+    const contributorRoleBoolState = await Promise.all(contributorRoleWaitState.map(async (indexContributorRole) => {
+      const resElement = await db.select().from('dc_contributors').where('index_contributor_role_id', indexContributorRole)
+      if (resElement.length === 0) return false
+      return true
+    }))
+
+    await Promise.all(contributorRoleWaitState.map(async (element, index) => {
+      if (!contributorRoleBoolState[index]) await db('indexing_contributor_role_document').where('indexing_contributor_role_id', element).del()
+    }))
+
+    const contributorFreqZero = db.select('indexing_contributor_id').from('indexing_contributor_document').where('frequency', 0)
     await db('indexing_contributor_document').whereIn('indexing_contributor_id', contributorFreqZero).del()
   },
   overrideContributorDocument: async (contributor, role, documentId) => {
@@ -299,6 +313,7 @@ const documentRepository = {
 
     await db('dc_contributors').insert({
       index_contributor_id: subqueryContributor,
+      index_contributor_role_id: subqueryContributorRole,
       index_document_id: documentId,
     })
   },
