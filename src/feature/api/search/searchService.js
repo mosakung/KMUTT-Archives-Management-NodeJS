@@ -1,5 +1,5 @@
+/* Search Feature */
 import searchFeature from './feature/informationRetrieval'
-
 import contributorFeature from './feature/contributor'
 import contributorRoleFeature from './feature/contributorRole'
 import creatorFeature from './feature/creator'
@@ -7,7 +7,15 @@ import creatorOrgNameFeature from './feature/creatorOrganizationName'
 import publisherFeature from './feature/publisher'
 import yearFeature from './feature/year'
 
-const mainSearchService = async (searchSet) => {
+/* Hook Page */
+import hookDocInPage from './hookDocInPage'
+
+/* Cache */
+import pullSearchCache from './cache/pullSearchCache'
+import compareSearchInput from './cache/compareSearchInput'
+import setSearchCache from './cache/setSearchCache'
+
+const mainSearchService = async (searchSet, page, context, limitPerPage = 10) => {
   const {
     search,
     contributor,
@@ -17,6 +25,32 @@ const mainSearchService = async (searchSet) => {
     publisher,
     year,
   } = searchSet
+
+  const { user } = context
+
+  const prevSearch = pullSearchCache(user.id)
+
+  if (prevSearch) {
+    const {
+      prevInput,
+      foundDocument,
+      totalPage,
+      rawDocumentRelevance,
+      efficiencyInputSearch,
+    } = prevSearch
+
+    const sameSearch = compareSearchInput(prevInput, searchSet)
+    if (sameSearch) {
+      return {
+        foundDocument,
+        totalPage,
+        currPage: page,
+        documentRelevance: hookDocInPage(rawDocumentRelevance, page, limitPerPage),
+        efficiencyInputSearch,
+        errorMessage: null,
+      }
+    }
+  }
 
   const fulltextSearch = search.join(' ')
 
@@ -41,13 +75,28 @@ const mainSearchService = async (searchSet) => {
     relevanceScore: relevance.find((element) => element.idDocument === documentId).relevanceScore,
   }))
 
+  const foundDocument = result.length
+  const totalPage = Math.max(1, Math.ceil(result.length / limitPerPage))
+  const efficiencyInputSearch = {
+    fulltext: search,
+    keywordDeepcut: log,
+  }
+
+  setSearchCache({
+    userId: user.id,
+    prevInput: searchSet,
+    foundDocument,
+    totalPage,
+    rawDocumentRelevance: result,
+    efficiencyInputSearch,
+  })
+
   return {
-    foundDocument: result.length,
-    documentRelevance: result,
-    efficiencyInputSearch: {
-      fulltext: search,
-      keywordDeepcut: log,
-    },
+    foundDocument,
+    totalPage,
+    currPage: page,
+    documentRelevance: hookDocInPage(result, page, limitPerPage),
+    efficiencyInputSearch,
     errorMessage: null,
   }
 }

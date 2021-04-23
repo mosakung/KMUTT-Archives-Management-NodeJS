@@ -1,6 +1,6 @@
 import mainSearchService from './searchService'
 
-export const searchController = async (searchSet) => {
+export const searchController = async (searchSet, page, context) => {
   const { year } = searchSet
 
   const yearInt = year.map((el) => parseInt(el, 10))
@@ -11,7 +11,7 @@ export const searchController = async (searchSet) => {
 
   const newBodySearchSet = { ...searchSet, year: yearInt }
 
-  const result = await mainSearchService(newBodySearchSet)
+  const result = await mainSearchService(newBodySearchSet, page, context)
 
   return result
 }

@@ -8,7 +8,7 @@ export const searchGraphql = gql(fileGraphqlType)
 
 export const searchResolver = {
   Query: {
-    searchDocument: (_, { searchSet }) => searchController(searchSet),
+    searchDocument: (_, { searchSet, page }, context) => searchController(searchSet, page, context),
   },
 }
 
