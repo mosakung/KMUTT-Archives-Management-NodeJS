@@ -32,10 +32,18 @@ const parserDocumentStatus = {
     }))
     return defineParser
   },
-  overide: (pageId, tokens) => tokens.map((token) => ({
-    pre_term: token,
-    index_page_in_document_id: pageId,
-  })),
+  override: (pageId, tokens) => {
+    const arr = []
+    tokens.forEach((element) => {
+      if (element !== null) {
+        arr.push({
+          pre_term: element,
+          index_page_in_document_id: pageId,
+        })
+      }
+    })
+    return arr
+  },
 }
 
 export default parserDocumentStatus

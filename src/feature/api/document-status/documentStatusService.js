@@ -101,7 +101,7 @@ export const overridePertermService = async ({ overide, newPage }, documentId) =
   if (permission) {
     await Promise.all(overide.map(async (element) => {
       await repo.clearPertermInPage(element.pageId)
-      const bodyParser = parser.overide(element.pageId, element.token)
+      const bodyParser = parser.override(element.pageId, element.token)
       await repo.overidePertermInPage(bodyParser)
       return true
     }))
@@ -111,7 +111,7 @@ export const overridePertermService = async ({ overide, newPage }, documentId) =
       if (checkPageStatus) return { pageIndex: element.pageIndex, documentId, status: false }
       const row = await repo.addNewPage(element.pageIndex, element.name, documentId)
       const PageId = row[0]
-      const bodyParser = parser.overide(PageId, element.token)
+      const bodyParser = parser.override(PageId, element.token)
       await repo.overidePertermInPage(bodyParser)
       return { pageIndex: element.pageIndex, documentId, status: true }
     }))

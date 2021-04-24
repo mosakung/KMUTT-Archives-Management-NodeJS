@@ -33,9 +33,23 @@ export const getDocumentService = async (pk) => {
 
   const rowIssuedDate = await repo.selectIndexingIssuedDateDocument(rowDocument.index_issued_date)
   const date = rowIssuedDate.issued_date
+  const dateCreate = rowDocument.rec_create_at
+  const dateMod = rowDocument.rec_modified_at
+
   let publishs = null
+  let createDate = null
+  let modDate = null
+
   if (date) {
     publishs = `${date.getFullYear()}-${(`0${date.getMonth() + 1}`).slice(-2)}-${date.getDate()}`
+  }
+
+  if (dateCreate) {
+    createDate = `${dateCreate.getFullYear()}-${(`0${dateCreate.getMonth() + 1}`).slice(-2)}-${dateCreate.getDate()}`
+  }
+
+  if (dateMod) {
+    modDate = `${dateMod.getFullYear()}-${(`0${dateMod.getMonth() + 1}`).slice(-2)}-${dateMod.getDate()}`
   }
   const tag = await tagInDocumentService(pk)
 
@@ -75,9 +89,9 @@ export const getDocumentService = async (pk) => {
     thesisDegreeLevel: rowDocument.thesis_degree_level,
     thesisDegreeDiscipline: rowDocument.thesis_degree_discipline,
     thesisDegreeGrantor: rowDocument.thesis_degree_grantor,
-    recCreateAt: rowDocument.rec_create_at,
+    recCreateAt: createDate,
     recCreateBy: rowDocument.rec_create_by,
-    recModifiedAt: rowDocument.rec_modified_at,
+    recModifiedAt: modDate,
     recModifiedBy: rowDocument.rec_modified_by,
     keyword: parser.resultDcKeyword(rowsKeyword),
     relation: parser.resultDcRelation(rowsRelation),
