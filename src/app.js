@@ -3,6 +3,9 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 
+/* Setting */
+import './setting'
+
 /* Import File JS */
 import path from './path'
 import auth from './feature/midderware/auth'
