@@ -3,12 +3,13 @@ import db from '../../../db/initializing'
 export const generateIdfScore = async () => {
   const datetimeKnex = db.fn.now()
   const subqueryNDocument = db('document').count('document_id as value').where('rec_status', 1).andWhereBetween('status_process_document', [5, 6])
-  const N = (await subqueryNDocument).value
+
+  const N = (await subqueryNDocument)[0].value
 
   try {
     const responese = await db('term_word')
       .update({ score_idf: db.raw(`?? / ${N}`, ['frequency']), rec_modified_at: datetimeKnex })
-    return responese.affectedRows
+    return responese
   } catch (err) {
     console.error('update idf error (corn-job)\nERROR LOG :', err.message)
     return false
@@ -28,9 +29,9 @@ export const generateTfIdfScore = async () => {
       .whereIn('index_document_id', db.select('document_id').from('document').where('rec_status', 1))
       .andWhere('rec_status', 1)
       .andWhere('generate_by', 'init-user')
-      .update({ score_tf_idf: (await db('score').max('score_tf_idf as value')).value })
+      .update({ score_tf_idf: (await db('score').max('score_tf_idf as value'))[0].value })
 
-    const affectedRows = responeseSystem.affectedRows + responeseUser.affectedRows
+    const affectedRows = responeseSystem[0].affectedRows + responeseUser
     return affectedRows
   } catch (err) {
     console.error('update tf-idf error (corn-job)\nERROR LOG :', err.message)
