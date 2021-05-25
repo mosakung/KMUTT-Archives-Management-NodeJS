@@ -209,6 +209,7 @@ export const uploadDocumentService = async (fileUpload) => {
 
   const uploadDir = `${process.cwd()}/uploadfile`
   const name = `${Date.now() + Math.random()}.pdf`
+  // const name = 'kati2547.pdf'
   const path = `${uploadDir}/${name}`
 
   await new Promise((resolve, reject) => stream

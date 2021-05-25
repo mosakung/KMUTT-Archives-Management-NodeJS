@@ -5,7 +5,7 @@ import repo from './IRrepository'
 
 import retrievalDefault from './retrievalDefault'
 
-const informationRetrieval = async (fulltext, similarSize = 2, similarThreshold = 0.72) => {
+const informationRetrieval = async (fulltext, searchTokenOrigin, similarSize = 2, similarThreshold = 0.72) => {
   if (fulltext === '') return { relevance: await retrievalDefault(), log: null }
 
   /* Shoot API Django for Tokenizer */
@@ -13,11 +13,21 @@ const informationRetrieval = async (fulltext, similarSize = 2, similarThreshold 
 
   /* Set Variable */
   const { tokens, similarTokens } = responseAPI.output
-  const lengthToken = tokens.length
+
+  searchTokenOrigin.forEach((element) => {
+    const prevTokens = [...tokens]
+
+    if (!prevTokens.includes(element)) {
+      tokens.push(element)
+    }
+  })
 
   /* Clean Variable */
   const keySearchCleanSpace = tokens.filter((x) => x !== ' ')
   const tokenWithSimilar = parser.extendSimilarWord(keySearchCleanSpace, similarTokens, similarSize, similarThreshold)
+
+  const lengthToken = tokenWithSimilar.length
+
   const keySearch = tokenWithSimilar.map((key) => key.replace(/\s+/g, ''))
 
   const retrievalTerm = await Promise.all(keySearch.map(async (element) => ({ termId: await repo.selectTermId(element), keyword: element })))

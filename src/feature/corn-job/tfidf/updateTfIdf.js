@@ -19,7 +19,7 @@ export const generateIdfScore = async () => {
 export const generateTfIdfScore = async () => {
   const sqlUpdateTfIdf = 'UPDATE `score`'
     + ' SET `score_tf_idf` = score.score_tf * (SELECT score_idf FROM term_word tw WHERE tw.term_word_id = score.index_term_word_id)'
-    + ` WHERE \`rec_status\` = ${1}`
+    + ' WHERE `rec_status` = 1'
     + ' AND `generate_by` = \'init-system\''
     + ' AND index_document_id IN (SELECT document_id FROM `document` WHERE rec_status = 1)'
 

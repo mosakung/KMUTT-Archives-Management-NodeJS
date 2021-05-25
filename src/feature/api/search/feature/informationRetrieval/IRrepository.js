@@ -16,6 +16,7 @@ const irRepository = {
       .select()
       .from('score')
       .where('index_term_word_id', termId)
+      .andWhere('rec_status', 1)
     return rows
   },
   selectFinishDocument: async (docId) => {
