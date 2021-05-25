@@ -13,6 +13,7 @@ const creatorOrgNameFilter = async (filters, docIdArr) => {
     .from('document')
     .whereIn('document_id', docIdArr)
     .whereIn('index_creator_orgname', subQueryCreatorOrgName)
+    .andWhere('status_process_document', 6)
     .distinct()
 
   const result = rows.map((row) => row.document_id)

@@ -12,6 +12,7 @@ const creatorFilter = async (filters, docIdArr) => {
     .select('document_id')
     .from('document')
     .whereIn('document_id', docIdArr)
+    .andWhere('status_process_document', 6)
     .whereIn('index_creator', subQueryCreator)
     .distinct()
 

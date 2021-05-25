@@ -10,6 +10,7 @@ const publisherFilter = async (filters, docIdArr) => {
     .from('document')
     .whereIn('document_id', docIdArr)
     .whereIn('index_publisher', subQueryPublisher)
+    .andWhere('status_process_document', 6)
     .distinct()
 
   const result = rows.map((row) => row.document_id)
