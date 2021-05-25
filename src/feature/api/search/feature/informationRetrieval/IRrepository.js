@@ -33,7 +33,8 @@ const irRepository = {
       .select('document_id', 'DC_title')
       .from('document')
       .where('DC_title', 'like', `%${word}%`)
-
+      .andWhere('status_process_document', 6)
+      .andWhere('rec_status', 1)
     return rows
   },
 }
