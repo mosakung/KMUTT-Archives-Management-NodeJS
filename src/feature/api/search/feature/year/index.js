@@ -21,6 +21,7 @@ const yearFilter = async (year, docIdArr) => {
     .from('document')
     .whereIn('document_id', docIdArr)
     .whereIn('index_issued_date', subQueryIssuedDate)
+    .andWhere('status_process_document', 6)
     .distinct()
 
   const result = rows.map((row) => row.document_id)
