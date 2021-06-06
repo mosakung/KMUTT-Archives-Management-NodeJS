@@ -54,8 +54,6 @@ const mainSearchService = async (searchSet, page, context, limitPerPage = 10) =>
 
   const fulltextSearch = search.join(' ')
 
-  console.log(fulltextSearch)
-
   const { relevance, log } = await searchFeature(fulltextSearch, search)
 
   const relevanceIdSet = relevance.map((element) => element.idDocument)
@@ -83,8 +81,6 @@ const mainSearchService = async (searchSet, page, context, limitPerPage = 10) =>
     fulltext: search,
     keywordDeepcut: log,
   }
-
-  console.log(efficiencyInputSearch)
 
   setSearchCache({
     userId: user.id,
