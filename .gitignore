@@ -107,3 +107,4 @@ dist
 *.pdf
 
 .env.development
+.env.production
